@@ -3,8 +3,8 @@
       "id": "tweak_app",
       "name": "Tweaking Tool",
       "version": "1.2.0",
-      "download_url": "https://yourdomain.com/downloads/tweak_app_v1.2.0.zip",
-      "executable": "TweakingTool.exe",
+      "download_url": "https://peczuga.github.io/petey/apps/MyTweakApp.zip",
+      "executable": "programeringslutprojekt.exe",
       "description": "Advanced system tweaking and optimization tool",
       "size": "15.2 MB",
       "category": "System Tools"
