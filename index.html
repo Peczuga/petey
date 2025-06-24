@@ -245,12 +245,12 @@
             e.preventDefault();
             
             // Replace 'your-installer.exe' with the actual path to your installer
-            const installerUrl = 'peteys-launcher-installer.exe';
+            const installerUrl = 'PeteyLauncherInstaller.exe';
             
             // Create a temporary link element and trigger download
             const link = document.createElement('a');
             link.href = installerUrl;
-            link.download = 'peteys-launcher-installer.exe';
+            link.download = 'PeteyLauncherInstaller.exe';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
