@@ -240,43 +240,38 @@
         </div>
     </div>
 
-    <script>
-        document.getElementById('downloadBtn').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Replace 'your-installer.exe' with the actual path to your installer
-            const installerUrl = 'PeteyLauncherInstaller.exe';
-            
-            // Create a temporary link element and trigger download
-            const link = document.createElement('a');
-            link.href = installerUrl;
-            link.download = 'PeteyLauncherInstaller.exe';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            
-            // Optional: Show download started message
-            const btn = this;
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="download-icon">✓</span> Download Started';
-            btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
-            
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
-            }, 3000);
-        });
+<script>
+    document.getElementById('downloadBtn').addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const installerUrl = 'https://peczuga.github.io/petey/PeteyLauncherInstaller.exe'; 
 
-        // Add some interactive animations
-        const container = document.querySelector('.container');
-        
-        container.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px) scale(1.02)';
-        });
-        
-        container.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-        });
-    </script>
+        const link = document.createElement('a');
+        link.href = installerUrl;
+        link.download = 'PeteyLauncherInstaller.exe';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        const btn = this;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span class="download-icon">✓</span> Download Started';
+        btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+        }, 3000);
+    });
+
+    const container = document.querySelector('.container');
+    container.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-5px) scale(1.02)';
+    });
+    container.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+    });
+</script>
+
 </body>
 </html>
