@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Landing Page</title>
+    <title>Petey's Launcher - Download</title>
     <style>
         * {
             margin: 0;
@@ -12,280 +12,270 @@
         }
 
         body {
-            height: 100vh;
-            overflow: hidden;
-            font-family: 'Arial', sans-serif;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="10" fill="%23ffffff" stroke="%23000000" stroke-width="2"/></svg>'), auto;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
-        #video-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
-            filter: blur(8px);
-            transition: filter 2s ease-in-out;
-        }
-
-        #overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 1;
-            transition: opacity 2s ease-in-out;
-        }
-
-        #enter-text {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 3rem;
-            font-weight: 300;
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
             text-align: center;
-            z-index: 2;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 20px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            }
+            100% {
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+            }
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            letter-spacing: 2px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
 
-        #enter-text:hover {
-            transform: translate(-50%, -50%) scale(1.05);
-            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #5a6fd8, #6b42a3);
         }
 
-        #main-content {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 2;
-            opacity: 0;
-            transition: opacity 2s ease-in-out;
+        .download-btn:active {
+            transform: translateY(0);
         }
 
-        #profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 4px solid rgba(255, 255, 255, 0.8);
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-            transition: transform 0.3s ease;
-        }
-
-        #profile-pic:hover {
-            transform: scale(1.1);
-        }
-
-        #username {
-            color: white;
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-            letter-spacing: 1px;
-        }
-
-        #quote {
-            color: rgba(255, 255, 255, 0.9);
+        .download-icon {
             font-size: 1.2rem;
-            font-style: italic;
-            margin-bottom: 40px;
-            max-width: 600px;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-            line-height: 1.4;
         }
 
-        #socials {
+        .info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .info-title {
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-text {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .features {
+            margin-top: 2rem;
+            text-align: left;
+        }
+
+        .features h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            color: #666;
             display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .social-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.2);
+        .feature-list li.in-progress::before {
+            content: "⏳";
+            color: #ff9800;
         }
 
-        .social-icon:hover {
-            transform: translateY(-8px) scale(1.1);
-            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.4);
+        .feature-list li.completed::before {
+            content: "✓";
+            color: #4CAF50;
         }
 
-
-
-        .fade-out {
-            opacity: 0 !important;
-            pointer-events: none;
-        }
-
-        .show-content {
-            opacity: 1 !important;
-        }
-
-        .unblur {
-            filter: blur(0px) !important;
-        }
-
-        /* Responsive design */
+        /* Responsive Design */
         @media (max-width: 768px) {
-            #enter-text {
-                font-size: 2rem;
-                padding: 0 20px;
+            .container {
+                padding: 2rem;
             }
-            
-            #username {
+
+            h1 {
                 font-size: 2rem;
             }
-            
-            #quote {
+
+            .download-btn {
+                padding: 0.875rem 2rem;
                 font-size: 1rem;
-                padding: 0 20px;
             }
-            
-            .social-icon {
+
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .subtitle {
+                font-size: 1rem;
+            }
+
+            .download-btn {
+                padding: 0.75rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .logo {
                 width: 50px;
                 height: 50px;
+                font-size: 1.25rem;
             }
-            
-            #profile-pic {
-                width: 120px;
-                height: 120px;
-            }
-        }
-
-        /* Custom scrollbar for future content */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
-    <!-- Background Video -->
-    <video id="video-background" autoplay muted loop>
-        <source src="https://drive.google.com/uc?export=download&id=1JtSnX5ZGxRQSe9BdOifc3Hu-HZgx4TMe" type="video/mp4">
-    </video>
-
-    <!-- Overlay -->
-    <div id="overlay"></div>
-
-    <!-- Enter Text -->
-    <div id="enter-text" onclick="enterSite()">click to enter...</div>
-
-    <!-- Main Content -->
-    <div id="main-content">
-        <img id="profile-pic" src="https://via.placeholder.com/150x150/4A90E2/ffffff?text=YOUR+GIF" alt="Profile Picture">
-        <!-- Replace with your GIF URL -->
+    <div class="container">
+        <div class="logo">P</div>
+        <h1>Petey's Launcher</h1>
+        <p class="subtitle">The ultimate game launcher and management tool</p>
         
-        <div id="username">Your Username</div>
-        <!-- Replace with your username -->
+        <a href="#" class="download-btn" id="downloadBtn">
+            <span class="download-icon">⬇</span>
+            Download Installer
+        </a>
         
-        <div id="quote">"Your inspiring quote goes here - something that represents you and your vision."</div>
-        <!-- Replace with your quote -->
-        
-        <div id="socials">
-            <img class="social-icon" src="https://via.placeholder.com/60x60/1DA1F2/ffffff?text=TW" alt="Twitter" onclick="openSocial('https://twitter.com/yourusername')">
-            <img class="social-icon" src="https://via.placeholder.com/60x60/E4405F/ffffff?text=IG" alt="Instagram" onclick="openSocial('https://instagram.com/yourusername')">
-            <img class="social-icon" src="https://via.placeholder.com/60x60/0077B5/ffffff?text=LI" alt="LinkedIn" onclick="openSocial('https://linkedin.com/in/yourusername')">
-            <img class="social-icon" src="https://via.placeholder.com/60x60/FF0000/ffffff?text=YT" alt="YouTube" onclick="openSocial('https://youtube.com/@yourusername')">
-            <img class="social-icon" src="https://via.placeholder.com/60x60/5865F2/ffffff?text=DC" alt="Discord" onclick="openSocial('https://discord.gg/yourinvite')">
-            <!-- Replace with your actual social media icons and links -->
+        <div class="features">
+            <h3>Contents</h3>
+            <ul class="feature-list">
+                <li class="completed">Tweaking utility - Yes</li>
+                <li class="in-progress">Game overlay - In progress</li>
+                <li class="in-progress">Custom crosshair overlays - In progress</li>
+            </ul>
         </div>
     </div>
 
-
-
     <script>
-        let hasEntered = false;
-
-        function enterSite() {
-            if (hasEntered) return;
-            hasEntered = true;
-
-            // Fade out enter text
-            const enterText = document.getElementById('enter-text');
-            enterText.classList.add('fade-out');
-
-            // Unblur video
-            const video = document.getElementById('video-background');
-            video.classList.add('unblur');
-
-            // Fade out overlay slightly
-            const overlay = document.getElementById('overlay');
-            overlay.style.background = 'rgba(0, 0, 0, 0.1)';
-
-            // Show main content
-            const mainContent = document.getElementById('main-content');
-            setTimeout(() => {
-                mainContent.classList.add('show-content');
-            }, 500);
-
-            // Start music (video already has audio)
-            video.muted = false;
-            const fadeInterval = setInterval(() => {
-                if (video.volume < 0.7) {
-                    video.volume += 0.02;
-                } else {
-                    clearInterval(fadeInterval);
-                }
-            }, 50);
-        }
-
-        function fadeInMusic(audio) {
-            // Removed - video audio is handled directly
-        }
-
-        function openSocial(url) {
-            window.open(url, '_blank');
-        }
-
-        // Add click listener to entire document for enter functionality
-        document.addEventListener('click', function(e) {
-            if (!hasEntered && e.target.id !== 'enter-text') {
-                enterSite();
-            }
-        });
-
-        // Add keyboard support
-        document.addEventListener('keydown', function(e) {
-            if (!hasEntered && (e.key === 'Enter' || e.key === ' ')) {
-                enterSite();
-            }
-        });
-
-        // Prevent context menu for cleaner experience
-        document.addEventListener('contextmenu', function(e) {
+        document.getElementById('downloadBtn').addEventListener('click', function(e) {
             e.preventDefault();
+            
+            // Replace 'your-installer.exe' with the actual path to your installer
+            const installerUrl = 'peteys-launcher-installer.exe';
+            
+            // Create a temporary link element and trigger download
+            const link = document.createElement('a');
+            link.href = installerUrl;
+            link.download = 'peteys-launcher-installer.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // Optional: Show download started message
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="download-icon">✓</span> Download Started';
+            btn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = 'linear-gradient(135deg, #667eea, #764ba2)';
+            }, 3000);
+        });
+
+        // Add some interactive animations
+        const container = document.querySelector('.container');
+        
+        container.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-5px) scale(1.02)';
+        });
+        
+        container.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
         });
     </script>
 </body>
