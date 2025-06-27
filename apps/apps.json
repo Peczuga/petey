@@ -18,45 +18,5 @@
       "description": "Real-time gaming performance overlay with FPS counter",
       "size": "8.7 MB",
       "category": "Gaming"
-    },
-    {
-      "id": "game_booster",
-      "name": "Game Booster",
-      "version": "1.5.2",
-      "download_url": "https://yourdomain.com/downloads/game_booster_v1.5.2.zip",
-      "executable": "GameBooster.exe",
-      "description": "Optimize system performance for gaming",
-      "size": "12.1 MB",
-      "category": "Gaming"
-    },
-    {
-      "id": "file_organizer",
-      "name": "File Organizer Pro",
-      "version": "3.1.0",
-      "download_url": "https://yourdomain.com/downloads/file_organizer_v3.1.0.zip",
-      "executable": "FileOrganizer.exe",
-      "description": "Automatically organize files and folders",
-      "size": "9.8 MB",
-      "category": "Productivity"
-    },
-    {
-      "id": "screen_recorder",
-      "name": "Screen Recorder",
-      "version": "2.3.1",
-      "download_url": "https://yourdomain.com/downloads/screen_recorder_v2.3.1.zip",
-      "executable": "ScreenRecorder.exe",
-      "description": "High-quality screen recording with audio",
-      "size": "22.5 MB",
-      "category": "Media"
-    },
-    {
-      "id": "password_manager",
-      "name": "Password Manager",
-      "version": "4.0.0",
-      "download_url": "https://yourdomain.com/downloads/password_manager_v4.0.0.zip",
-      "executable": "PasswordManager.exe",
-      "description": "Secure password storage and generation",
-      "size": "18.3 MB",
-      "category": "Security"
     }
   ]
