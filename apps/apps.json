@@ -10,8 +10,8 @@
       "category": "System Tools"
     },
     {
-      "id": "gaming_overlay",
-      "name": "Gaming Overlay",
+      "id": "crosshair_overlay",
+      "name": "Crosshair Overlay",
       "version": "2.0.1",
       "download_url": "https://yourdomain.com/downloads/gaming_overlay_v2.0.1.zip",
       "executable": "GamingOverlay.exe",
