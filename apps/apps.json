@@ -1,22 +1,22 @@
 [
-    {
-      "id": "tweak_app",
-      "name": "Tweaking Tool",
-      "version": "1.2.0",
-      "download_url": "https://github.com/peczuga/petey/raw/main/apps/MyTweakApp.zip",
-      "executable": "programeringslutprojekt.exe",
-      "description": "Advanced system tweaking and optimization tool",
-      "size": "15.2 MB",
-      "category": "System Tools"
-    },
-    {
-      "id": "crosshair_overlay",
-      "name": "Crosshair Overlay",
-      "version": "2.0.1",
-      "download_url": "https://github.com/peczuga/petey/raw/main/apps/MyCrosshairApp.zip",
-      "executable": "crosshair.exe",
-      "description": "Real-time gaming performance overlay with FPS counter",
-      "size": "8.7 MB",
-      "category": "Gaming"
-    }
-  ]
+  {
+    "id": "tweak_app",
+    "name": "Tweaking Tool",
+    "version": "1.2.0",
+    "download_url": "https://github.com/peczuga/petey/raw/main/apps/MyTweakApp.zip",
+    "executable": "programeringslutprojekt.exe",
+    "description": "Advanced system tweaking and optimization tool",
+    "size": "15.2 MB",
+    "category": "System Tools"
+  },
+  {
+    "id": "crosshair_overlay",
+    "name": "Crosshair Overlay",
+    "version": "2.0.1",
+    "download_url": "https://github.com/peczuga/petey/raw/main/apps/MyCrosshairApp.zip",
+    "executable": "crosshair.exe",
+    "description": "Real-time gaming performance overlay with FPS counter",
+    "size": "8.7 MB",
+    "category": "Gaming"
+  }
+]
