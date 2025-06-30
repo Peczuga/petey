@@ -13,8 +13,8 @@
       "id": "crosshair_overlay",
       "name": "Crosshair Overlay",
       "version": "2.0.1",
-      "download_url": "https://yourdomain.com/downloads/gaming_overlay_v2.0.1.zip",
-      "executable": "GamingOverlay.exe",
+      "download_url": "https://github.com/peczuga/petey/raw/main/apps/MyCrosshairApp.zip",
+      "executable": "crosshair.exe",
       "description": "Real-time gaming performance overlay with FPS counter",
       "size": "8.7 MB",
       "category": "Gaming"
