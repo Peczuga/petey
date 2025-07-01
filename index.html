@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Petey's Launcher - Download</title>
+    
+    <!-- Firebase SDK -->
+    <script type="module" src="firebase-config.js"></script>
     <style>
         * {
             margin: 0;
@@ -792,7 +795,7 @@
                     <div class="stat-desc">Average Rating</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number">12.4K</div>
+                    <div class="stat-number">0</div>
                     <div class="stat-label">Downloads</div>
                     <div class="stat-desc">Happy Gamers</div>
                 </div>
@@ -919,29 +922,91 @@
         createReviewCards();
     }, 10000);
 
-    // Download button functionality
-    document.getElementById('downloadBtn').addEventListener('click', function(e) {
-        e.preventDefault();
+            // Download counter functionality
+        let downloadCount = localStorage.getItem('peteyLauncherDownloads') || 0;
         
-        const installerUrl = 'https://peczuga.github.io/petey/PeteyLauncherInstaller.exe'; 
+        // Check if Firebase is available
+        const hasFirebase = typeof window.downloadTracker !== 'undefined';
+        
+        // Update download count display with animation
+        function updateDownloadCount(count = downloadCount) {
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                if (stat.nextElementSibling && stat.nextElementSibling.textContent === 'Downloads') {
+                    const displayCount = Math.floor(count / 1000 * 10) / 10;
+                    const newText = displayCount >= 1 ? displayCount + 'K' : count.toString();
+                    
+                    // Add animation class
+                    stat.style.animation = 'none';
+                    stat.offsetHeight; // Trigger reflow
+                    stat.style.animation = 'countUp 0.5s ease-out';
+                    stat.textContent = newText;
+                }
+            });
+        }
+        
+        // Initialize download count from Firebase if available
+        async function initializeDownloadCount() {
+            if (hasFirebase) {
+                try {
+                    const count = await window.downloadTracker.getDownloadCount();
+                    downloadCount = count;
+                    updateDownloadCount(count);
+                } catch (error) {
+                    console.log('Using local storage fallback');
+                    updateDownloadCount();
+                }
+            } else {
+                updateDownloadCount();
+            }
+        }
 
-        const link = document.createElement('a');
-        link.href = installerUrl;
-        link.download = 'PeteyLauncherInstaller.exe';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // Download button functionality
+        document.getElementById('downloadBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const installerUrl = 'https://peczuga.github.io/petey/PeteyLauncherInstaller.exe'; 
 
-        const btn = this;
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
-        btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            const link = document.createElement('a');
+            link.href = installerUrl;
+            link.download = 'PeteyLauncherInstaller.exe';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
+            // Increment download count
+            if (hasFirebase) {
+                try {
+                    const newCount = await window.downloadTracker.incrementDownloadCount();
+                    if (newCount) {
+                        downloadCount = newCount;
+                        updateDownloadCount(newCount);
+                    }
+                } catch (error) {
+                    // Fallback to local storage
+                    downloadCount++;
+                    localStorage.setItem('peteyLauncherDownloads', downloadCount);
+                    updateDownloadCount();
+                }
+            } else {
+                downloadCount++;
+                localStorage.setItem('peteyLauncherDownloads', downloadCount);
+                updateDownloadCount();
+            }
+
+            const btn = this;
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
             btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
-        }, 3000);
-    });
+
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            }, 3000);
+        });
+
+        // Initialize download count on page load
+        initializeDownloadCount();
 
     // Enhanced container interactions
     const container = document.querySelector('.container');
@@ -968,6 +1033,7 @@
             this.style.animation = '';
         });
     });
+
 </script>
 
 </body>
