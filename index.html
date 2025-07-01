@@ -975,29 +975,61 @@
             document.body.removeChild(link);
 
             // Increment download count
+            let downloadWasCounted = false;
+            
             if (hasFirebase) {
                 try {
-                    const newCount = await window.downloadTracker.incrementDownloadCount();
-                    if (newCount) {
-                        downloadCount = newCount;
-                        updateDownloadCount(newCount);
+                    const result = await window.downloadTracker.incrementDownloadCount();
+                    if (result) {
+                        downloadCount = result.count;
+                        downloadWasCounted = !result.alreadyCounted;
+                        updateDownloadCount(result.count);
                     }
                 } catch (error) {
-                    // Fallback to local storage
-                    downloadCount++;
-                    localStorage.setItem('peteyLauncherDownloads', downloadCount);
-                    updateDownloadCount();
+                    // Fallback to local storage with 12-hour limit
+                    const now = Date.now();
+                    const lastDownload = localStorage.getItem('peteyLauncherLastDownload');
+                    const twelveHours = 12 * 60 * 60 * 1000;
+                    
+                    if (!lastDownload || (now - parseInt(lastDownload)) >= twelveHours) {
+                        downloadCount++;
+                        localStorage.setItem('peteyLauncherDownloads', downloadCount);
+                        localStorage.setItem('peteyLauncherLastDownload', now.toString());
+                        downloadWasCounted = true;
+                        updateDownloadCount();
+                    } else {
+                        console.log('Download already counted for this user in the last 12 hours');
+                        downloadWasCounted = false;
+                    }
                 }
             } else {
-                downloadCount++;
-                localStorage.setItem('peteyLauncherDownloads', downloadCount);
-                updateDownloadCount();
+                // Local storage only with 12-hour limit
+                const now = Date.now();
+                const lastDownload = localStorage.getItem('peteyLauncherLastDownload');
+                const twelveHours = 12 * 60 * 60 * 1000;
+                
+                if (!lastDownload || (now - parseInt(lastDownload)) >= twelveHours) {
+                    downloadCount++;
+                    localStorage.setItem('peteyLauncherDownloads', downloadCount);
+                    localStorage.setItem('peteyLauncherLastDownload', now.toString());
+                    downloadWasCounted = true;
+                    updateDownloadCount();
+                } else {
+                    console.log('Download already counted for this user in the last 12 hours');
+                    downloadWasCounted = false;
+                }
             }
 
             const btn = this;
             const originalHTML = btn.innerHTML;
-            btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
-            btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            
+            if (downloadWasCounted) {
+                btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
+                btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            } else {
+                btn.innerHTML = '<span class="download-icon">⏰</span> Already Downloaded';
+                btn.style.background = 'linear-gradient(135deg, #ffa500, #ff6b35)';
+            }
 
             setTimeout(() => {
                 btn.innerHTML = originalHTML;
