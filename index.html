@@ -796,7 +796,7 @@
                     <div class="stat-desc">Average Rating</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-number">12.4K</div>
+                    <div class="stat-number" id="downloadCounter">0</div>
                     <div class="stat-label">Downloads</div>
                     <div class="stat-desc">Happy Gamers</div>
                 </div>
@@ -939,7 +939,7 @@
     const counterRef = database.ref("downloads");
     // Function to update counter on the page
     function updateCounterDisplay(count) {
-        const stat = document.querySelector(".stat-number");
+        const stat = document.getElementById("downloadCounter");
         if (stat) stat.textContent = count;
     }
     // Listen for counter changes
