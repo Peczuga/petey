@@ -947,9 +947,74 @@
         const count = snapshot.val() || 0;
         updateCounterDisplay(count);
     });
+    // Check if user can download (12-hour limit)
+    function canDownload() {
+        const lastDownload = localStorage.getItem('lastDownloadTime');
+        if (!lastDownload) return true;
+        
+        const now = Date.now();
+        const timeSinceLastDownload = now - parseInt(lastDownload);
+        const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+        
+        return timeSinceLastDownload >= twelveHours;
+    }
+    
+    // Get time remaining until next download
+    function getTimeRemaining() {
+        const lastDownload = localStorage.getItem('lastDownloadTime');
+        if (!lastDownload) return 0;
+        
+        const now = Date.now();
+        const timeSinceLastDownload = now - parseInt(lastDownload);
+        const twelveHours = 12 * 60 * 60 * 1000;
+        
+        return Math.max(0, twelveHours - timeSinceLastDownload);
+    }
+    
+    // Format time remaining as hours and minutes
+    function formatTimeRemaining(milliseconds) {
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+        return `${hours}h ${minutes}m`;
+    }
+    
+    // Update button state based on download availability
+    function updateButtonState() {
+        const btn = document.getElementById('downloadBtn');
+        if (canDownload()) {
+            btn.innerHTML = '<span class="download-icon">⬇</span> Download Installer';
+            btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            btn.style.cursor = 'pointer';
+            btn.disabled = false;
+        } else {
+            const timeRemaining = getTimeRemaining();
+            const formattedTime = formatTimeRemaining(timeRemaining);
+            btn.innerHTML = `<span class="download-icon">⏰</span> Try again in ${formattedTime}`;
+            btn.style.background = 'linear-gradient(135deg, #666, #999)';
+            btn.style.cursor = 'not-allowed';
+            btn.disabled = true;
+        }
+    }
+    
+    // Check button state on page load
+    updateButtonState();
+    
+    // Update countdown every minute
+    setInterval(() => {
+        if (!canDownload()) {
+            updateButtonState();
+        }
+    }, 60000); // Check every minute
+    
     // Modify your existing download button code to increment the counter
     document.getElementById('downloadBtn').addEventListener('click', function(e) {
         e.preventDefault();
+        
+        // Check if user can download
+        if (!canDownload()) {
+            return;
+        }
+        
         // Start download
         const installerUrl = 'https://peczuga.github.io/petey/PeteyLauncherInstaller.exe';
         const link = document.createElement('a');
@@ -958,16 +1023,24 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        
+        // Store download time
+        localStorage.setItem('lastDownloadTime', Date.now().toString());
+        
         // Update counter in database
         counterRef.transaction(current => (current || 0) + 1);
+        
+        // Update button state
+        updateButtonState();
+        
         // Button feedback
         const btn = this;
         const originalHTML = btn.innerHTML;
         btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
         btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+        
         setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
+            updateButtonState(); // This will show the countdown if needed
         }, 3000);
     });
 
