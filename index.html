@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Petey's Launcher - Download</title>
+    <title>Bandit - Advanced System Tweaking Utility</title>
     <style>
         * {
             margin: 0;
@@ -11,17 +11,997 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --gradient-light: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            --glow: #ffffff;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
             overflow-x: hidden;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 3px;
             position: relative;
         }
 
-        /* Animated background particles */
-        .bg-particles {
+        .logo::after {
+            content: 'BANDIT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--white);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo:hover::after {
+            opacity: 1;
+            transform: translate(3px, 3px);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Hero Section with Particles */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(ellipse at center, var(--dark-gray) 0%, var(--black) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #particles-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            max-width: 800px;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 1rem;
+            letter-spacing: -2px;
+            animation: glitch 3s infinite;
+            position: relative;
+            text-transform: uppercase;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                text-shadow: 
+                    0 0 10px rgba(255, 255, 255, 0.8),
+                    0 0 20px rgba(255, 255, 255, 0.6),
+                    0 0 30px rgba(255, 255, 255, 0.4);
+            }
+            25% {
+                text-shadow: 
+                    -2px 0 10px rgba(255, 0, 255, 0.8),
+                    2px 0 20px rgba(0, 255, 255, 0.6),
+                    0 0 30px rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                text-shadow: 
+                    2px 0 10px rgba(0, 255, 255, 0.8),
+                    -2px 0 20px rgba(255, 0, 255, 0.6),
+                    0 0 30px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .hero .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: var(--silver);
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            letter-spacing: 2px;
+        }
+
+        .hero-description {
+            margin-bottom: 2rem;
+            color: var(--silver);
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.7s forwards;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.9s forwards;
+        }
+
+        .download-wrapper {
+            text-align: center;
+        }
+
+        .download-counter {
+            font-size: 0.8rem;
+            color: var(--light-gray);
+            margin-top: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .download-number {
+            font-weight: 600;
+            color: var(--silver);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Interactive Buttons */
+        .btn {
+            padding: 1rem 2.5rem;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--white);
+            color: var(--black);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(255, 255, 255, 0.4),
+                0 0 60px rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--gray);
+            position: relative;
+        }
+
+        .btn-secondary::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--white), transparent, var(--white));
+            border-radius: 50px;
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.3s ease;
+            animation: borderRotate 3s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-secondary:hover::after {
+            opacity: 1;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--white);
+            transform: translateY(-3px);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--white);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .section-title::before,
+        .section-title::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+        }
+
+        .section-title::before {
+            left: -120px;
+        }
+
+        .section-title::after {
+            right: -120px;
+        }
+
+        /* 3D Feature Cards */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            perspective: 1000px;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+            top: -150%;
+            left: -150%;
+        }
+
+        .feature-card:hover {
+            transform: rotateX(-5deg) rotateY(5deg) translateZ(20px);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.8),
+                0 0 60px rgba(255, 255, 255, 0.1),
+                inset 0 0 20px rgba(255, 255, 255, 0.05);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .feature-card:nth-child(even) .feature-icon {
+            animation-delay: 1.5s;
+        }
+
+        .feature-card h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .feature-card p {
+            color: var(--light-silver);
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Why Choose Us Section */
+        .why-choose-us {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-radius: 30px;
+            padding: 4rem 3rem;
+            margin: 3rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .why-choose-us::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveGrid 20s linear infinite;
+        }
+
+        @keyframes moveGrid {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .why-item {
+            text-align: center;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .why-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .why-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--white), var(--silver));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.5); }
+        }
+
+        .why-item h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .why-item p {
+            color: var(--light-silver);
+            line-height: 1.6;
+        }
+
+        /* Socials Section */
+        .socials-section {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .socials-grid {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .social-card {
+            background: var(--dark-gray);
+            border-radius: 20px;
+            padding: 2rem;
+            min-width: 200px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .social-card:hover::before {
+            left: 100%;
+        }
+
+        .social-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .social-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .social-name {
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .social-followers {
+            color: var(--silver);
+            font-size: 0.9rem;
+        }
+
+        /* YouTube Showcase */
+        .youtube-section {
+            background: var(--gradient-dark);
+            border-radius: 30px;
+            padding: 4rem 3rem;
+            margin: 3rem 0;
+            text-align: center;
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 3rem auto;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            background: var(--black);
+            padding-top: 56.25%; /* 16:9 aspect ratio */
+        }
+
+        .video-placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .video-placeholder:hover {
+            transform: scale(1.02);
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--black);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .play-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .video-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .video-stat {
+            text-align: center;
+        }
+
+        .video-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            display: block;
+        }
+
+        .video-stat-label {
+            color: var(--silver);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Reviews Section */
+        .reviews-section {
+            padding: 5rem 2rem;
+        }
+
+        .reviews-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .review-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .review-stars {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .review-text {
+            color: var(--light-silver);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .review-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--dark-gray);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            color: var(--white);
+            font-weight: 600;
+            display: block;
+        }
+
+        .author-title {
+            color: var(--silver);
+            font-size: 0.9rem;
+        }
+
+        /* Interactive FAQ */
+        .faq-item {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .faq-question {
+            padding: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.8rem;
+            font-weight: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-item.active {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.8rem 1.8rem;
+            color: var(--light-silver);
+            line-height: 1.8;
+        }
+
+        /* Download Button in sections */
+        .section-download {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .download-btn {
+            font-size: 1.3rem;
+            padding: 1.5rem 4rem;
+            background: linear-gradient(135deg, var(--white), var(--light-silver));
+            color: var(--black);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 
+                0 10px 30px rgba(255, 255, 255, 0.3),
+                0 0 60px rgba(255, 255, 255, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 10px 30px rgba(255, 255, 255, 0.3),
+                    0 0 60px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                box-shadow: 
+                    0 10px 40px rgba(255, 255, 255, 0.5),
+                    0 0 80px rgba(255, 255, 255, 0.4);
+            }
+        }
+
+        .download-btn:hover {
+            animation: none;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 
+                0 15px 50px rgba(255, 255, 255, 0.5),
+                0 0 100px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Mobile menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--black);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loader.hide {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-circle {
+            width: 80px;
+            height: 80px;
+            border: 3px solid var(--medium-gray);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        .loader-text {
+            color: var(--white);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: pulse 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 26, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(20px);
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 250px;
+                justify-content: center;
+            }
+
+            .section-title::before,
+            .section-title::after {
+                display: none;
+            }
+
+            .features-grid,
+            .reviews-container {
+                grid-template-columns: 1fr;
+            }
+
+            .feature-card:hover {
+                transform: none;
+            }
+
+            .video-stats {
+                gap: 1.5rem;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-left.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s ease;
+        }
+
+        .slide-in-right.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Matrix rain effect background */
+        .matrix-bg {
             position: fixed;
             top: 0;
             left: 0;
@@ -29,1047 +1009,668 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
+            opacity: 0.03;
         }
 
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: #00ff88;
-            border-radius: 50%;
-            animation: float 8s infinite linear;
-            opacity: 0.6;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) translateX(0);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-100px) translateX(100px);
-                opacity: 0;
-            }
-        }
-
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            position: relative;
-            z-index: 1;
-        }
-
-        .container {
-            background: rgba(15, 15, 35, 0.85);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            border: 2px solid rgba(0, 255, 136, 0.2);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.4),
-                0 0 60px rgba(0, 255, 136, 0.1),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-            padding: 3rem;
-            text-align: center;
-            max-width: 600px;
-            width: 100%;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
+        /* Animated background shapes */
+        .bg-shapes {
+            position: fixed;
             top: 0;
-            left: -100%;
+            left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.1), transparent);
-            transition: left 0.5s;
-        }
-
-        .container:hover::before {
-            left: 100%;
-        }
-
-        .container:hover {
-            transform: translateY(-8px);
-            border-color: rgba(0, 255, 136, 0.4);
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.5),
-                0 0 80px rgba(0, 255, 136, 0.2),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        }
-
-        .logo {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, #00ff88, #00b4d8, #0077b6);
-            border-radius: 25px;
-            margin: 0 auto 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            box-shadow: 
-                0 15px 35px rgba(0, 255, 136, 0.3),
-                0 0 30px rgba(0, 255, 136, 0.2);
-            animation: logoGlow 3s ease-in-out infinite alternate;
-            position: relative;
             overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            z-index: 0;
+            pointer-events: none;
         }
 
-        .logo::before {
-            content: '';
+        .shape {
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: logoShine 4s linear infinite;
-        }
-
-        .logo-p {
-            width: 50px;
-            height: 70px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .rhombus {
-            position: absolute;
-            background: transparent;
-            border: 3px solid #ffffff;
-            transform-origin: center;
-            box-shadow: 
-                0 0 15px rgba(255, 255, 255, 0.4),
-                inset 0 0 10px rgba(0, 255, 136, 0.2);
-        }
-
-        /* Vertical spine of P */
-        .rhombus-1 {
-            width: 8px;
-            height: 60px;
-            left: 8px;
-            top: 5px;
-            transform: skew(-15deg);
-        }
-
-        /* Top horizontal bar */
-        .rhombus-2 {
-            width: 25px;
-            height: 8px;
-            left: 15px;
-            top: 8px;
-            transform: skew(0deg, -15deg);
-        }
-
-        /* Top vertical connector */
-        .rhombus-3 {
-            width: 8px;
-            height: 20px;
-            left: 37px;
-            top: 8px;
-            transform: skew(-15deg);
-        }
-
-        /* Middle horizontal bar */
-        .rhombus-4 {
-            width: 25px;
-            height: 8px;
-            left: 15px;
-            top: 28px;
-            transform: skew(0deg, -15deg);
-        }
-
-        .logo:hover {
-            transform: scale(1.1) rotate(5deg);
-            box-shadow: 
-                0 20px 45px rgba(0, 255, 136, 0.4),
-                0 0 40px rgba(0, 255, 136, 0.3);
-        }
-
-        .logo:hover .rhombus {
-            box-shadow: 
-                0 0 25px rgba(255, 255, 255, 0.6),
-                inset 0 0 15px rgba(0, 255, 136, 0.4);
-            border-color: rgba(255, 255, 255, 0.9);
-            transform: scale(1.05);
-        }
-
-        .logo:hover .rhombus-1 {
-            transform: skew(-15deg) scale(1.05);
-        }
-
-        .logo:hover .rhombus-2 {
-            transform: skew(0deg, -15deg) scale(1.05);
-        }
-
-        .logo:hover .rhombus-3 {
-            transform: skew(-15deg) scale(1.05);
-        }
-
-        .logo:hover .rhombus-4 {
-            transform: skew(0deg, -15deg) scale(1.05);
-        }
-
-        @keyframes logoGlow {
-            0% {
-                box-shadow: 
-                    0 15px 35px rgba(0, 255, 136, 0.3),
-                    0 0 30px rgba(0, 255, 136, 0.2);
-            }
-            100% {
-                box-shadow: 
-                    0 20px 45px rgba(0, 255, 136, 0.5),
-                    0 0 50px rgba(0, 255, 136, 0.3);
-            }
-        }
-
-        @keyframes logoShine {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        h1 {
-            color: #ffffff;
-            margin-bottom: 0.5rem;
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00ff88, #00b4d8, #0077b6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 30px rgba(0, 255, 136, 0.3);
-            animation: titleGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% {
-                filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.3));
-            }
-            100% {
-                filter: drop-shadow(0 0 20px rgba(0, 255, 136, 0.6));
-            }
-        }
-
-        .subtitle {
-            color: #b0b3b8;
-            margin-bottom: 2rem;
-            font-size: 1.2rem;
-            line-height: 1.6;
-            font-weight: 300;
-        }
-
-        .download-btn {
-            background: linear-gradient(135deg, #00ff88, #00b4d8);
-            color: #000;
-            border: none;
-            padding: 1.2rem 3rem;
-            font-size: 1.2rem;
-            font-weight: 700;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.8rem;
-            box-shadow: 
-                0 15px 35px rgba(0, 255, 136, 0.3),
-                0 0 30px rgba(0, 255, 136, 0.2);
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .download-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-
-        .download-btn:hover::before {
-            left: 100%;
-        }
-
-        .download-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 
-                0 20px 50px rgba(0, 255, 136, 0.4),
-                0 0 40px rgba(0, 255, 136, 0.3);
-            background: linear-gradient(135deg, #00ff88, #00d9ff);
-        }
-
-        .download-btn:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        .download-icon {
-            font-size: 1.3rem;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateY(0);
-            }
-            40% {
-                transform: translateY(-5px);
-            }
-            60% {
-                transform: translateY(-3px);
-            }
-        }
-
-        .benefits-section {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: rgba(0, 255, 136, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .benefits-title {
-            color: #00ff88;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1.5rem;
-        }
-
-        .benefit-card {
-            background: rgba(0, 255, 136, 0.08);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            background: rgba(0, 255, 136, 0.12);
-            border-color: rgba(0, 255, 136, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.2);
-        }
-
-        .benefit-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .benefit-title {
-            color: #ffffff;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            font-size: 1.1rem;
-        }
-
-        .benefit-text {
-            color: #b0b3b8;
-            font-size: 0.9rem;
-            line-height: 1.5;
-        }
-
-        .features {
-            margin-top: 2.5rem;
-            text-align: left;
-        }
-
-        .features h3 {
-            color: #00ff88;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .feature-list {
-            list-style: none;
-            padding: 0;
-        }
-
-        .feature-list li {
-            padding: 1rem;
-            color: #b0b3b8;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            margin-bottom: 0.5rem;
-            transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .feature-list li:hover {
-            background: rgba(0, 255, 136, 0.1);
-            border-color: rgba(0, 255, 136, 0.3);
-            transform: translateX(10px);
-        }
-
-        .feature-list li.in-progress::before {
-            content: "⏳";
-            font-size: 1.2rem;
-            color: #ffa500;
-            animation: pulse 2s infinite;
-        }
-
-        .feature-list li.completed::before {
-            content: "✅";
-            font-size: 1.2rem;
-            color: #00ff88;
-            animation: checkmark 0.5s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-        }
-
-        @keyframes checkmark {
-            0% {
-                transform: scale(0);
-            }
-            50% {
-                transform: scale(1.2);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        /* Reviews Section */
-        .reviews-section {
-            margin-top: 3rem;
-            max-width: 1000px;
-            width: 100%;
-        }
-
-        .reviews-title {
-            color: #00ff88;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .reviews-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
-        }
-
-        .review-card {
-            background: rgba(15, 15, 35, 0.9);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 15px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .review-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
-            transition: left 0.5s;
-        }
-
-        .review-card:hover::before {
-            left: 100%;
-        }
-
-        .review-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 255, 136, 0.4);
-            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.1);
-        }
-
-        .review-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .review-avatar {
-            width: 50px;
-            height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00ff88, #00b4d8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #000;
+            animation: floatShape 20s infinite ease-in-out;
         }
 
-        .review-info {
-            flex: 1;
-        }
-
-        .review-name {
-            color: #ffffff;
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .review-game {
-            color: #00ff88;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .review-stars {
-            color: #ffa500;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .review-text {
-            color: #b0b3b8;
-            line-height: 1.6;
-            font-size: 0.95rem;
-            margin-bottom: 1rem;
-        }
-
-        .review-metrics {
-            display: flex;
-            gap: 1rem;
-            font-size: 0.8rem;
-        }
-
-        .review-metric {
-            background: rgba(0, 255, 136, 0.1);
-            padding: 0.25rem 0.5rem;
-            border-radius: 8px;
-            color: #00ff88;
-            font-weight: 600;
-        }
-
-        .reviews-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-            padding: 2rem;
-            background: rgba(0, 255, 136, 0.05);
-            border-radius: 20px;
-            border: 1px solid rgba(0, 255, 136, 0.2);
-        }
-
-        .stat {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #00ff88;
-            margin-bottom: 0.5rem;
-            animation: countUp 2s ease-out;
-        }
-
-        .stat-label {
-            color: #ffa500;
-            font-size: 1.2rem;
-            margin-bottom: 0.25rem;
-            font-weight: 600;
-        }
-
-        .stat-desc {
-            color: #b0b3b8;
-            font-size: 0.9rem;
-        }
-
-        @keyframes countUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
             }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
+            50% {
+                transform: translateY(-100px) rotate(180deg);
             }
         }
 
-        @keyframes slideIn {
-            0% {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 2rem;
-            }
-
-            h1 {
-                font-size: 2.5rem;
-            }
-
-            .download-btn {
-                padding: 1rem 2rem;
-                font-size: 1rem;
-            }
-
-            .logo {
-                width: 80px;
-                height: 80px;
-                font-size: 2rem;
-            }
-
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-duration: 20s;
+            animation-delay: -5s;
         }
 
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .container {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .subtitle {
-                font-size: 1rem;
-            }
-
-            .download-btn {
-                padding: 0.875rem 1.5rem;
-                font-size: 0.9rem;
-            }
-
-            .logo {
-                width: 70px;
-                height: 70px;
-                font-size: 1.8rem;
-            }
-
-            .reviews-container {
-                grid-template-columns: 1fr;
-            }
-
-            .reviews-stats {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 1rem;
-                padding: 1.5rem;
-            }
-
-            .stat-number {
-                font-size: 2rem;
-            }
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 30%;
+            animation-duration: 30s;
+            animation-delay: -10s;
         }
     </style>
-    <!-- Firebase App (the core Firebase SDK) -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-    <!-- Firebase Realtime Database -->
-    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="bg-particles"></div>
-    
-    <div class="main-container">
-        <div class="container">
-            <div class="logo">
-                <div class="logo-p">
-                    <div class="rhombus rhombus-1"></div>
-                    <div class="rhombus rhombus-2"></div>
-                    <div class="rhombus rhombus-3"></div>
-                    <div class="rhombus rhombus-4"></div>
-                </div>
-            </div>
-            <h1>Petey's Launcher</h1>
-            <p class="subtitle">The ultimate game launcher and performance optimization tool</p>
-            
-            <a href="#" class="download-btn" id="downloadBtn">
-                <span class="download-icon">⬇</span>
-                Download Installer
-            </a>
-            
-            <div class="benefits-section">
-                <h2 class="benefits-title">Unlock Your Gaming Potential</h2>
-                <div class="benefits-grid">
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🚀</div>
-                        <div class="benefit-title">Performance Boost</div>
-                        <div class="benefit-text">Get 15-30% FPS increase by optimizing Windows processes, disabling unnecessary services, and fine-tuning system resources for maximum gaming performance.</div>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">⚡</div>
-                        <div class="benefit-title">Reduced Input Lag</div>
-                        <div class="benefit-text">Minimize input delay by up to 50ms through advanced mouse optimization, polling rate tweaks, and system timer resolution adjustments.</div>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🎯</div>
-                        <div class="benefit-title">Network Optimization</div>
-                        <div class="benefit-text">Lower your ping by 10-25ms with TCP/IP stack tweaks, DNS optimization, and network adapter fine-tuning for competitive advantage.</div>
-                    </div>
-                    <div class="benefit-card">
-                        <div class="benefit-icon">🔧</div>
-                        <div class="benefit-title">System Cleanup</div>
-                        <div class="benefit-text">Remove bloatware, clean registry entries, and optimize startup programs to free up system resources and improve overall stability.</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="features">
-                <h3>Current Features</h3>
-                <ul class="feature-list">
-                    <li class="completed">Advanced System Tweaking - Boost FPS & reduce latency</li>
-                    <li class="in-progress">Real-time Game Overlay - Monitor performance metrics</li>
-                    <li class="in-progress">Custom Crosshair System - Professional aim enhancement</li>
-                </ul>
-            </div>
-        </div>
+    <!-- Background shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
 
-        <!-- Reviews Section -->
-        <div class="reviews-section">
-            <h2 class="reviews-title">What Gamers Are Saying</h2>
-            <div class="reviews-container" id="reviewsContainer"></div>
-            <div class="reviews-stats">
-                <div class="stat">
-                    <div class="stat-number">4.9</div>
-                    <div class="stat-label">★★★★★</div>
-                    <div class="stat-desc">Average Rating</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number" id="downloadCounter">0</div>
-                    <div class="stat-label">Downloads</div>
-                    <div class="stat-desc">Happy Gamers</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">+28%</div>
-                    <div class="stat-label">FPS Boost</div>
-                    <div class="stat-desc">Average Gain</div>
-                </div>
-            </div>
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-circle"></div>
+            <div class="loader-text">INITIALIZING BANDIT</div>
         </div>
     </div>
 
-<script>
-    // Create floating particles
-    function createParticles() {
-        const particlesContainer = document.querySelector('.bg-particles');
-        const numberOfParticles = 50;
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="logo">BANDIT</a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#why-us">Why Us</a></li>
+                <li><a href="#socials">Community</a></li>
+                <li><a href="#showcase">Showcase</a></li>
+                <li><a href="#reviews">Reviews</a></li>
+                <li><a href="#faq">FAQ</a></li>
+            </ul>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
 
-        for (let i = 0; i < numberOfParticles; i++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = Math.random() * 100 + '%';
-            particle.style.animationDelay = Math.random() * 8 + 's';
-            particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
-            particlesContainer.appendChild(particle);
-        }
-    }
-
-    // Initialize particles
-    createParticles();
-
-    // Fake reviews data
-    const reviews = [
-        {
-            name: "ProGamer2024",
-            game: "Valorant",
-            avatar: "🎯",
-            stars: "★★★★★",
-            text: "Holy shit, this actually works! Went from 180fps to 240fps on Valorant. Input lag is basically gone now, my aim feels so much more responsive.",
-            metrics: ["+60 FPS", "-15ms ping", "Immortal 2"]
-        },
-        {
-            name: "xXSniperXx",
-            game: "CS2",
-            avatar: "🔥",
-            stars: "★★★★★",
-            text: "Been using this for 3 months now. My 1% lows are way more stable and I'm hitting shots I never could before. Finally made it to Global Elite!",
-            metrics: ["+35 FPS", "-8ms input lag", "Global Elite"]
-        },
-        {
-            name: "ApexLegend",
-            game: "Apex Legends",
-            avatar: "⚡",
-            stars: "★★★★★",
-            text: "Dude this launcher is insane. My potato PC can finally run Apex at 144fps stable. The tweaks are next level, way better than those YouTube guides.",
-            metrics: ["+45 FPS", "144Hz stable", "Diamond"]
-        },
-        {
-            name: "FortniteKing",
-            game: "Fortnite",
-            avatar: "👑",
-            stars: "★★★★★",
-            text: "Best optimization tool I've ever used. Zero input delay now and my builds are so much smoother. Already recommended to my whole squad.",
-            metrics: ["+50 FPS", "0 input delay", "Champion"]
-        },
-        {
-            name: "RocketLeaguer",
-            game: "Rocket League",
-            avatar: "🚀",
-            stars: "★★★★★",
-            text: "The network optimizations are crazy good. My ping dropped from 45ms to 28ms and I'm finally hitting those ceiling shots consistently!",
-            metrics: ["-17ms ping", "+25 FPS", "Grand Champ"]
-        },
-        {
-            name: "CallOfDutyPro",
-            game: "COD MW3",
-            avatar: "💀",
-            stars: "★★★★★",
-            text: "This tool is a game changer. My KD went from 1.2 to 1.8 after using these tweaks. The fps boost and reduced lag makes such a difference in gunfights.",
-            metrics: ["+40 FPS", "1.8 KD", "-12ms lag"]
-        }
-    ];
-
-    // Function to create review cards
-    function createReviewCards() {
-        const container = document.getElementById('reviewsContainer');
-        
-        // Shuffle and select 3 random reviews
-        const shuffled = reviews.sort(() => 0.5 - Math.random());
-        const selectedReviews = shuffled.slice(0, 3);
-        
-        selectedReviews.forEach((review, index) => {
-            const reviewCard = document.createElement('div');
-            reviewCard.className = 'review-card';
-            reviewCard.style.animationDelay = `${index * 0.2}s`;
-            reviewCard.style.animation = 'slideIn 0.6s ease-out forwards';
-            
-            reviewCard.innerHTML = `
-                <div class="review-header">
-                    <div class="review-avatar">${review.avatar}</div>
-                    <div class="review-info">
-                        <div class="review-name">${review.name}</div>
-                        <div class="review-game">${review.game} Player</div>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <canvas id="particles-canvas"></canvas>
+        <div class="hero-content">
+            <h1>BANDIT</h1>
+            <p class="subtitle">Advanced System Tweaking & Optimization Utility</p>
+            <p class="hero-description">
+                Unlock your system's true potential with Bandit - the comprehensive tweaking utility 
+                designed for power users who demand complete control over their Windows experience.
+            </p>
+            <div class="hero-buttons">
+                <div class="download-wrapper">
+                    <a href="#" class="btn btn-primary" onclick="downloadBandit()">
+                        <span>⬇</span> Download Now
+                    </a>
+                    <div class="download-counter">
+                        <span class="download-number" id="downloadCount">0</span> downloads
                     </div>
                 </div>
-                <div class="review-stars">${review.stars}</div>
-                <div class="review-text">${review.text}</div>
-                <div class="review-metrics">
-                    ${review.metrics.map(metric => `<span class="review-metric">${metric}</span>`).join('')}
+                <a href="#features" class="btn btn-secondary">
+                    <span>→</span> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+        <h2 class="section-title fade-in">Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card fade-in">
+                <span class="feature-icon">⚡</span>
+                <h3>Performance Boost</h3>
+                <p>Advanced CPU and GPU optimization algorithms that squeeze every bit of performance from your hardware. Real-time monitoring and automatic adjustments ensure peak performance.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🛡️</span>
+                <h3>Privacy Shield</h3>
+                <p>Comprehensive privacy controls to disable telemetry, block trackers, and secure your system. Take back control of your data with military-grade protection.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🎨</span>
+                <h3>UI Revolution</h3>
+                <p>Transform your Windows interface with deep customization options. Modify system colors, transparency effects, animations, and create your perfect desktop environment.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🔧</span>
+                <h3>System Control</h3>
+                <p>Access hundreds of hidden Windows settings and registry tweaks through an intuitive interface. No more manual registry editing - everything is automated and safe.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">🚀</span>
+                <h3>Boot Optimizer</h3>
+                <p>Take control of your boot process with advanced startup management. Disable unnecessary services, optimize boot order, and achieve lightning-fast startup times.</p>
+            </div>
+            <div class="feature-card fade-in">
+                <span class="feature-icon">📊</span>
+                <h3>Live Analytics</h3>
+                <p>Comprehensive system monitoring with beautiful graphs and statistics. Track CPU, RAM, GPU, disk usage, and network activity with millisecond precision.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section id="why-us">
+        <h2 class="section-title fade-in">Why Choose Bandit?</h2>
+        <div class="why-choose-us fade-in">
+            <div class="why-grid">
+                <div class="why-item">
+                    <span class="why-icon">🎯</span>
+                    <h3>Precision Engineering</h3>
+                    <p>Every optimization is carefully tested and implemented with instant rollback options. Your system's stability is our priority.</p>
                 </div>
-            `;
+                <div class="why-item">
+                    <span class="why-icon">💡</span>
+                    <h3>AI-Powered Intelligence</h3>
+                    <p>Machine learning algorithms analyze your usage patterns to provide personalized optimization recommendations.</p>
+                </div>
+                <div class="why-item">
+                    <span class="why-icon">🔄</span>
+                    <h3>Living Software</h3>
+                    <p>Continuous updates ensure compatibility with the latest Windows builds and security patches.</p>
+                </div>
+                <div class="why-item">
+                    <span class="why-icon">🛡️</span>
+                    <h3>Safe & Secure</h3>
+                    <p>All changes are reversible with automatic backup points created before major modifications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Socials Section -->
+    <section id="socials" class="socials-section">
+        <h2 class="section-title fade-in">Join Our Community</h2>
+        <div class="socials-grid">
+            <div class="social-card fade-in">
+                <span class="social-icon">💬</span>
+                <div class="social-name">Discord</div>
+                <div class="social-followers">15,000+ members</div>
+            </div>
+            <div class="social-card fade-in">
+                <span class="social-icon">🐦</span>
+                <div class="social-name">Twitter</div>
+                <div class="social-followers">8,500+ followers</div>
+            </div>
+            <div class="social-card fade-in">
+                <span class="social-icon">📺</span>
+                <div class="social-name">YouTube</div>
+                <div class="social-followers">25,000+ subscribers</div>
+            </div>
+            <div class="social-card fade-in">
+                <span class="social-icon">📱</span>
+                <div class="social-name">Reddit</div>
+                <div class="social-followers">5,000+ members</div>
+            </div>
+            <div class="social-card fade-in">
+                <span class="social-icon">🔗</span>
+                <div class="social-name">GitHub</div>
+                <div class="social-followers">3,000+ stars</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- YouTube Showcase -->
+    <section id="showcase" class="youtube-section">
+        <h2 class="section-title">See Bandit in Action</h2>
+        <p style="color: var(--silver); margin-bottom: 3rem;">Watch our comprehensive walkthrough and see the power of Bandit</p>
+        <div class="video-container">
+            <div class="video-placeholder" onclick="playVideo()">
+                <div class="play-button">▶</div>
+            </div>
+        </div>
+        <div class="video-stats">
+            <div class="video-stat">
+                <span class="video-stat-number">1.2M</span>
+                <span class="video-stat-label">Views</span>
+            </div>
+            <div class="video-stat">
+                <span class="video-stat-number">45K</span>
+                <span class="video-stat-label">Likes</span>
+            </div>
+            <div class="video-stat">
+                <span class="video-stat-number">2.5K</span>
+                <span class="video-stat-label">Comments</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" class="reviews-section">
+        <h2 class="section-title fade-in">What Users Say</h2>
+        <div class="reviews-container">
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Bandit completely transformed my PC. My games run smoother, boot time is cut in half, and I finally have control over Windows telemetry. Absolutely essential tool!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">JD</div>
+                    <div class="author-info">
+                        <span class="author-name">John Davis</span>
+                        <span class="author-title">Power User</span>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"As a developer, I need my system running at peak performance. Bandit delivers exactly that with its intelligent optimization and real-time monitoring. Can't work without it!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">SK</div>
+                    <div class="author-info">
+                        <span class="author-name">Sarah Kim</span>
+                        <span class="author-title">Software Developer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"The UI customization features are incredible. I've created a completely personalized Windows experience. Plus, the privacy controls give me peace of mind."</p>
+                <div class="review-author">
+                    <div class="author-avatar">MT</div>
+                    <div class="author-info">
+                        <span class="author-name">Mike Thompson</span>
+                        <span class="author-title">Designer</span>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Been using Bandit for 6 months now. The regular updates and new features keep getting better. Support team is incredibly responsive too!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">EW</div>
+                    <div class="author-info">
+                        <span class="author-name">Emma Wilson</span>
+                        <span class="author-title">IT Professional</span>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Game changer for streaming! My OBS runs flawlessly now, and the system resource management is outstanding. Every streamer needs this!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">AC</div>
+                    <div class="author-info">
+                        <span class="author-name">Alex Chen</span>
+                        <span class="author-title">Content Creator</span>
+                    </div>
+                </div>
+            </div>
+            <div class="review-card fade-in">
+                <div class="review-stars">★★★★★</div>
+                <p class="review-text">"Skeptical at first, but Bandit proved me wrong. Safe, effective, and actually delivers on its promises. My laptop feels like a new machine!"</p>
+                <div class="review-author">
+                    <div class="author-avatar">RP</div>
+                    <div class="author-info">
+                        <span class="author-name">Rachel Park</span>
+                        <span class="author-title">Student</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section-download">
+            <a href="#" class="download-btn" onclick="downloadBandit()">
+                <span>⬇</span> Download Bandit Now
+            </a>
+            <div class="download-counter">
+                <span class="download-number" id="downloadCount2">0</span> downloads
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq">
+        <h2 class="section-title fade-in">Frequently Asked Questions</h2>
+        <div class="faq-container">
+            <div class="faq-item fade-in">
+                <div class="faq-question">Is Bandit safe to use?</div>
+                <div class="faq-answer">
+                    <p>Absolutely! Bandit is designed with safety as the top priority. Every change can be reverted, and we create automatic restore points before major modifications. The tool is regularly scanned for malware and is digitally signed.</p>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question">Will Bandit void my warranty?</div>
+                <div class="faq-answer">
+                    <p>No, Bandit only makes software-level changes that are completely reversible. It doesn't modify any hardware or firmware settings that could affect your warranty. All tweaks are within Microsoft's acceptable use guidelines.</p>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question">Can I use Bandit on multiple computers?</div>
+                <div class="faq-answer">
+                    <p>Yes! Bandit is free for personal use on unlimited devices. For commercial use or deployment in business environments, please contact us for a business license.</p>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question">Does Bandit work with Windows 11?</div>
+                <div class="faq-answer">
+                    <p>Yes! Bandit is fully compatible with Windows 11 and receives regular updates to support new Windows features. It also maintains backward compatibility with Windows 10.</p>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question">How often is Bandit updated?</div>
+                <div class="faq-answer">
+                    <p>We release updates every 2-4 weeks with new features, optimizations, and compatibility improvements. Critical security updates are pushed immediately when needed.</p>
+                </div>
+            </div>
+            <div class="faq-item fade-in">
+                <div class="faq-question">Can I contribute to Bandit's development?</div>
+                <div class="faq-answer">
+                    <p>We welcome community contributions! Join our Discord server to connect with the development team, suggest features, report bugs, or contribute to our open-source modules on GitHub.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Particle animation
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouseX = 0, mouseY = 0;
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                this.opacity = Math.random() * 0.5 + 0.2;
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x > canvas.width) this.x = 0;
+                if (this.x < 0) this.x = canvas.width;
+                if (this.y > canvas.height) this.y = 0;
+                if (this.y < 0) this.y = canvas.height;
+
+                // Mouse interaction
+                const dx = mouseX - this.x;
+                const dy = mouseY - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                if (distance < 100) {
+                    const force = (100 - distance) / 100;
+                    this.x -= dx * force * 0.02;
+                    this.y -= dy * force * 0.02;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const particleCount = window.innerWidth < 768 ? 50 : 100;
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            container.appendChild(reviewCard);
-        });
-    }
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
 
-    // Initialize reviews
-    createReviewCards();
+            // Draw connections
+            particles.forEach((particle, i) => {
+                particles.slice(i + 1).forEach(particle2 => {
+                    const dx = particle.x - particle2.x;
+                    const dy = particle.y - particle2.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - distance / 100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(particle2.x, particle2.y);
+                        ctx.stroke();
+                    }
+                });
+            });
 
-    // Rotate reviews every 10 seconds
-    setInterval(() => {
-        const container = document.getElementById('reviewsContainer');
-        container.innerHTML = '';
-        createReviewCards();
-    }, 10000);
-
-    // Your Firebase project config
-    const firebaseConfig = {
-        apiKey: "AIzaSyAxMg4MwiMy5aHfHsV-_Wpnee9j0otNMUI",
-        authDomain: "finalpeteycounter.firebaseapp.com",
-        databaseURL: "https://finalpeteycounter-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "finalpeteycounter",
-        storageBucket: "finalpeteycounter.firebasestorage.app",
-        messagingSenderId: "958270329252",
-        appId: "1:958270329252:web:81e5e74f207340bd1f7131"
-    };
-    // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const counterRef = database.ref("downloads");
-    // Function to update counter on the page
-    function updateCounterDisplay(count) {
-        const stat = document.getElementById("downloadCounter");
-        if (stat) stat.textContent = count;
-    }
-    // Listen for counter changes
-    counterRef.on("value", (snapshot) => {
-        const count = snapshot.val() || 0;
-        updateCounterDisplay(count);
-    });
-    // Check if user can download (12-hour limit)
-    function canDownload() {
-        const lastDownload = localStorage.getItem('lastDownloadTime');
-        if (!lastDownload) return true;
-        
-        const now = Date.now();
-        const timeSinceLastDownload = now - parseInt(lastDownload);
-        const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-        
-        return timeSinceLastDownload >= twelveHours;
-    }
-    
-    // Get time remaining until next download
-    function getTimeRemaining() {
-        const lastDownload = localStorage.getItem('lastDownloadTime');
-        if (!lastDownload) return 0;
-        
-        const now = Date.now();
-        const timeSinceLastDownload = now - parseInt(lastDownload);
-        const twelveHours = 12 * 60 * 60 * 1000;
-        
-        return Math.max(0, twelveHours - timeSinceLastDownload);
-    }
-    
-    // Format time remaining as hours and minutes
-    function formatTimeRemaining(milliseconds) {
-        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-        const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-        return `${hours}h ${minutes}m`;
-    }
-    
-    // Update button state based on download availability
-    function updateButtonState() {
-        const btn = document.getElementById('downloadBtn');
-        if (canDownload()) {
-            btn.innerHTML = '<span class="download-icon">⬇</span> Download Installer';
-            btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
-            btn.style.cursor = 'pointer';
-            btn.disabled = false;
-        } else {
-            const timeRemaining = getTimeRemaining();
-            const formattedTime = formatTimeRemaining(timeRemaining);
-            btn.innerHTML = `<span class="download-icon">⏰</span> Try again in ${formattedTime}`;
-            btn.style.background = 'linear-gradient(135deg, #666, #999)';
-            btn.style.cursor = 'not-allowed';
-            btn.disabled = true;
+            requestAnimationFrame(animateParticles);
         }
-    }
-    
-    // Check button state on page load
-    updateButtonState();
-    
-    // Update countdown every minute
-    setInterval(() => {
-        if (!canDownload()) {
-            updateButtonState();
+        animateParticles();
+
+        // Download counter animation
+        let downloadCount = 48723;
+        const downloadElements = [document.getElementById('downloadCount'), document.getElementById('downloadCount2')];
+
+        function updateDownloadCount() {
+            downloadCount += Math.floor(Math.random() * 3);
+            downloadElements.forEach(el => {
+                if (el) el.textContent = downloadCount.toLocaleString();
+            });
         }
-    }, 60000); // Check every minute
-    
-    // Modify your existing download button code to increment the counter
-    document.getElementById('downloadBtn').addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        // Check if user can download
-        if (!canDownload()) {
-            return;
+
+        // Initial update
+        updateDownloadCount();
+
+        // Update every 5-10 seconds
+        setInterval(() => {
+            updateDownloadCount();
+        }, Math.random() * 5000 + 5000);
+
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hide');
+            }, 1500);
+        });
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu when link clicked
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+
+        // FAQ toggle
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+                
+                // Close other FAQs
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Download function
+        function downloadBandit() {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Preparing Download...';
+            btn.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span>✓</span> Download Started!';
+                updateDownloadCount(); // Increment counter on download
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.style.pointerEvents = 'auto';
+                    alert('Download complete! Thank you for choosing Bandit.');
+                }, 2000);
+            }, 1500);
         }
-        
-        // Start download
-        const installerUrl = 'https://peczuga.github.io/petey/PeteyLauncherInstaller.exe';
-        const link = document.createElement('a');
-        link.href = installerUrl;
-        link.download = 'PeteyLauncherInstaller.exe';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        
-        // Store download time
-        localStorage.setItem('lastDownloadTime', Date.now().toString());
-        
-        // Update counter in database
-        counterRef.transaction(current => (current || 0) + 1);
-        
-        // Update button state
-        updateButtonState();
-        
-        // Button feedback
-        const btn = this;
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<span class="download-icon">✅</span> Download Started';
-        btn.style.background = 'linear-gradient(135deg, #00ff88, #00b4d8)';
-        
-        setTimeout(() => {
-            updateButtonState(); // This will show the countdown if needed
-        }, 3000);
-    });
 
-    // Enhanced container interactions
-    const container = document.querySelector('.container');
-    container.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-8px) scale(1.02)';
-    });
-    container.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
+        // Play video function
+        function playVideo() {
+            alert('Video playback would start here. In a real implementation, this would embed a YouTube video.');
+        }
 
-    // Logo click animation
-    document.querySelector('.logo').addEventListener('click', function() {
-        this.style.animation = 'none';
-        this.offsetHeight; // Trigger reflow
-        this.style.animation = 'logoGlow 0.5s ease-in-out';
-    });
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-    // Benefit cards hover sound effect (visual feedback)
-    document.querySelectorAll('.benefit-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.animation = 'pulse 0.3s ease-in-out';
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right').forEach(el => {
+            observer.observe(el);
         });
-        card.addEventListener('animationend', function() {
-            this.style.animation = '';
-        });
-    });
-</script>
 
+        // Add tilt effect to feature cards on mouse move
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+
+        // Parallax effect for background shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                const xPos = (x - 0.5) * speed * 50;
+                const yPos = (y - 0.5) * speed * 50;
+                shape.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+    </script>
 </body>
 </html>
