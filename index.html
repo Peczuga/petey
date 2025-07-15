@@ -64,6 +64,29 @@
             align-items: center;
         }
 
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
         .logo {
             font-size: 1.8rem;
             font-weight: 900;
@@ -506,69 +529,7 @@
             line-height: 1.6;
         }
 
-        /* Socials Section */
-        .socials-section {
-            text-align: center;
-            padding: 4rem 2rem;
-        }
 
-        .socials-grid {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            flex-wrap: wrap;
-            margin-top: 3rem;
-        }
-
-        .social-card {
-            background: var(--dark-gray);
-            border-radius: 20px;
-            padding: 2rem;
-            min-width: 200px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .social-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .social-card:hover::before {
-            left: 100%;
-        }
-
-        .social-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .social-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .social-name {
-            color: var(--white);
-            font-weight: 600;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .social-followers {
-            color: var(--silver);
-            font-size: 0.9rem;
-        }
 
         /* YouTube Showcase */
         .youtube-section {
@@ -929,6 +890,10 @@
                 pointer-events: all;
             }
 
+            .nav-social-icons {
+                display: none;
+            }
+
             .menu-toggle {
                 display: flex;
             }
@@ -1090,10 +1055,14 @@
     <nav id="navbar">
         <div class="nav-container">
             <a href="#home" class="logo">BANDIT</a>
+            <div class="nav-social-icons">
+                <a href="#" class="social-icon-nav" title="Discord">💬</a>
+                <a href="#" class="social-icon-nav" title="Twitter">🐦</a>
+                <a href="#" class="social-icon-nav" title="YouTube">📺</a>
+            </div>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#features">Features</a></li>
                 <li><a href="#why-us">Why Us</a></li>
-                <li><a href="#socials">Community</a></li>
                 <li><a href="#showcase">Showcase</a></li>
                 <li><a href="#reviews">Reviews</a></li>
                 <li><a href="#faq">FAQ</a></li>
@@ -1125,9 +1094,6 @@
                         <span class="download-number" id="downloadCount">0</span> downloads
                     </div>
                 </div>
-                <a href="#features" class="btn btn-secondary">
-                    <span>→</span> Learn More
-                </a>
             </div>
         </div>
     </section>
@@ -1194,38 +1160,6 @@
                     <h3>Safe & Secure</h3>
                     <p>All changes are reversible with automatic backup points created before major modifications.</p>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Socials Section -->
-    <section id="socials" class="socials-section">
-        <h2 class="section-title fade-in">Join Our Community</h2>
-        <div class="socials-grid">
-            <div class="social-card fade-in">
-                <span class="social-icon">💬</span>
-                <div class="social-name">Discord</div>
-                <div class="social-followers">15,000+ members</div>
-            </div>
-            <div class="social-card fade-in">
-                <span class="social-icon">🐦</span>
-                <div class="social-name">Twitter</div>
-                <div class="social-followers">8,500+ followers</div>
-            </div>
-            <div class="social-card fade-in">
-                <span class="social-icon">📺</span>
-                <div class="social-name">YouTube</div>
-                <div class="social-followers">25,000+ subscribers</div>
-            </div>
-            <div class="social-card fade-in">
-                <span class="social-icon">📱</span>
-                <div class="social-name">Reddit</div>
-                <div class="social-followers">5,000+ members</div>
-            </div>
-            <div class="social-card fade-in">
-                <span class="social-icon">🔗</span>
-                <div class="social-name">GitHub</div>
-                <div class="social-followers">3,000+ stars</div>
             </div>
         </div>
     </section>
