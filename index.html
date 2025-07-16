@@ -746,7 +746,7 @@
             line-height: 1.8;
         }
 
-        /* Download Button in sections */
+        /* ad Button in sections */
         .section-download {
             text-align: center;
             margin-top: 3rem;
@@ -1532,22 +1532,38 @@
         });
 
         // Download function
-        function downloadBandit() {
-            const btn = event.currentTarget;
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<span>⏳</span> Preparing Download...';
-            btn.style.pointerEvents = 'none';
-            
-            setTimeout(() => {
-                btn.innerHTML = '<span>✓</span> Download Started!';
-                updateDownloadCount(); // Increment counter on download
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.style.pointerEvents = 'auto';
-                    alert('Download complete! Thank you for choosing Bandit.');
-                }, 2000);
-            }, 1500);
+    function downloadBandit() {
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = 'BanditLauncherSetup.exe';
+        link.download = 'BanditLauncherSetup.exe';
+        
+        // Append to body, click, and remove
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Increment download counter
+        incrementDownloadCounter();
+    }
+    
+    function incrementDownloadCounter() {
+        const countElement = document.getElementById('downloadCount');
+        let currentCount = parseInt(countElement.textContent) || 0;
+        currentCount++;
+        countElement.textContent = currentCount;
+        
+        // Optional: Save to localStorage to persist across page reloads
+        localStorage.setItem('banditDownloadCount', currentCount);
+    }
+    
+    // Optional: Load saved download count on page load
+    window.addEventListener('load', function() {
+        const savedCount = localStorage.getItem('banditDownloadCount');
+        if (savedCount) {
+            document.getElementById('downloadCount').textContent = savedCount;
         }
+    });
 
         // Play video function
         function playVideo() {
