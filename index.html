@@ -60,31 +60,26 @@
             margin: 0 auto;
             padding: 1rem 2rem;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-section {
+            flex: 1;
+            display: flex;
             align-items: center;
         }
 
-        .nav-social-icons {
-            display: flex;
-            gap: 1rem;
-            margin-left: 2rem;
+        .nav-left-section {
+            justify-content: flex-start;
         }
 
-        .social-icon-nav {
-            color: var(--light-silver);
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-            position: relative;
-            padding: 0.5rem;
-            border-radius: 50%;
+        .nav-center-section {
+            justify-content: center;
         }
 
-        .social-icon-nav:hover {
-            color: var(--white);
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-2px);
+        .nav-right-section {
+            justify-content: flex-end;
         }
 
         .logo {
@@ -95,6 +90,7 @@
             transition: all 0.3s ease;
             letter-spacing: 3px;
             position: relative;
+            margin-right: 2rem;
         }
 
         .logo::after {
@@ -113,21 +109,60 @@
             transform: translate(3px, 3px);
         }
 
-        .nav-links {
+        .nav-links-left,
+        .nav-links-right {
             display: flex;
             list-style: none;
             gap: 2rem;
+            align-items: center;
+            margin: 0;
+            padding: 0;
         }
 
-        .nav-links a {
+        .nav-links-right {
+            margin-right: 2rem;
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon-nav {
             color: var(--light-silver);
             text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .nav-links-left a,
+        .nav-links-right a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
             transition: all 0.3s ease;
             position: relative;
             padding: 0.5rem 0;
         }
 
-        .nav-links a::before {
+        .nav-links-left a::before,
+        .nav-links-right a::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -138,13 +173,53 @@
             transition: width 0.3s ease;
         }
 
-        .nav-links a:hover::before {
+        .nav-links-left a:hover::before,
+        .nav-links-right a:hover::before {
             width: 100%;
         }
 
-        .nav-links a:hover {
-            color: var(--white);
+        .nav-links-left a:hover,
+        .nav-links-right a:hover {
+            color: var(--white) !important;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .shop-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-button {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .shop-button img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .shop-button:hover img {
+            filter: brightness(0) invert(1) opacity(1);
         }
 
         /* Hero Section with Particles */
@@ -379,241 +454,576 @@
             right: -120px;
         }
 
-        /* 3D Feature Cards */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-            perspective: 1000px;
-        }
-
-        .feature-card {
+        /* Features Comparison Card - Ripple Wave Effect */
+        .features-comparison {
             background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
-            padding: 2.5rem;
             border-radius: 20px;
+            padding: 3rem;
+            margin-top: 4rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
             position: relative;
             overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: -100%;
-            left: -100%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             transition: all 0.5s ease;
-            opacity: 0;
         }
 
-        .feature-card:hover::before {
-            opacity: 1;
-            top: -150%;
-            left: -150%;
-        }
-
-        .feature-card:hover {
-            transform: rotateX(-5deg) rotateY(5deg) translateZ(20px);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.8),
-                0 0 60px rgba(255, 255, 255, 0.1),
-                inset 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-            display: block;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .feature-card:nth-child(even) .feature-icon {
-            animation-delay: 1.5s;
-        }
-
-        .feature-card h3 {
-            color: var(--white);
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .feature-card p {
-            color: var(--light-silver);
-            line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        /* Why Choose Us Section */
-        .why-choose-us {
-            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
-            border-radius: 30px;
-            padding: 4rem 3rem;
-            margin: 3rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .why-choose-us::before {
+        .features-comparison::before {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.8s ease;
+            pointer-events: none;
+        }
+
+        .features-comparison:hover::before {
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: moveGrid 20s linear infinite;
         }
 
-        @keyframes moveGrid {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
+        .features-comparison:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(255, 255, 255, 0.1);
         }
+
+        .features-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .features-column {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .features-column h3 {
+            color: var(--white);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .features-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #4CAF50, transparent);
+            transition: width 0.6s ease;
+        }
+
+        .features-column:hover h3::after {
+            width: 100%;
+        }
+
+        .lacks-features h3::after {
+            background: linear-gradient(90deg, #9C27B0, transparent);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .features-list li {
+            color: var(--light-silver);
+            padding: 0.8rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+            padding-left: 2rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .features-list li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .features-list li:hover::before {
+            left: 100%;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .features-list li:hover {
+            color: var(--white);
+            padding-left: 2.5rem;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .has-features li::after {
+            content: '▶';
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #4CAF50;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .has-features li:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(3px);
+            text-shadow: 0 0 10px #4CAF50;
+        }
+
+        .lacks-features li::after {
+            content: '▲';
+            position: absolute;
+            left: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9C27B0;
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .lacks-features li:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) rotate(180deg);
+            text-shadow: 0 0 10px #9C27B0;
+        }
+
+        /* Wave animation for card */
+        @keyframes wave {
+            0%, 100% {
+                clip-path: polygon(0% 100%, 5% 95%, 10% 90%, 15% 85%, 20% 88%, 25% 92%, 30% 85%, 35% 88%, 40% 82%, 45% 85%, 50% 80%, 55% 85%, 60% 78%, 65% 83%, 70% 75%, 75% 80%, 80% 72%, 85% 77%, 90% 70%, 95% 75%, 100% 68%, 100% 100%);
+            }
+            50% {
+                clip-path: polygon(0% 100%, 5% 85%, 10% 80%, 15% 75%, 20% 78%, 25% 82%, 30% 75%, 35% 78%, 40% 72%, 45% 75%, 50% 70%, 55% 75%, 60% 68%, 65% 73%, 70% 65%, 75% 70%, 80% 62%, 85% 67%, 90% 60%, 95% 65%, 100% 58%, 100% 100%);
+            }
+        }
+
+        .features-comparison::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #4CAF50, #9C27B0, #4CAF50);
+            background-size: 200% 100%;
+            animation: wave 4s ease-in-out infinite, slideGradient 3s linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes slideGradient {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* Bouncing animation on scroll */
+        .features-list li {
+            transform: translateY(20px);
+            opacity: 0;
+            animation: bounceIn 0.6s ease forwards;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            60% {
+                transform: translateY(-5px);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Staggered bounce delays */
+        .features-list li:nth-child(1) { animation-delay: 0.1s; }
+        .features-list li:nth-child(2) { animation-delay: 0.2s; }
+        .features-list li:nth-child(3) { animation-delay: 0.3s; }
+        .features-list li:nth-child(4) { animation-delay: 0.4s; }
+        .features-list li:nth-child(5) { animation-delay: 0.5s; }
+        .features-list li:nth-child(6) { animation-delay: 0.6s; }
+        .features-list li:nth-child(7) { animation-delay: 0.7s; }
+        .features-list li:nth-child(8) { animation-delay: 0.8s; }
+        .features-list li:nth-child(9) { animation-delay: 0.9s; }
+        .features-list li:nth-child(10) { animation-delay: 1.0s; }
+        .features-list li:nth-child(11) { animation-delay: 1.1s; }
+        .features-list li:nth-child(12) { animation-delay: 1.2s; }
+        .features-list li:nth-child(13) { animation-delay: 1.3s; }
+        .features-list li:nth-child(14) { animation-delay: 1.4s; }
+        .features-list li:nth-child(15) { animation-delay: 1.5s; }
+        .features-list li:nth-child(16) { animation-delay: 1.6s; }
+
+        /* Why Choose Us Section */
 
         .why-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             position: relative;
             z-index: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            justify-content: center;
         }
 
         .why-item {
-            text-align: center;
-            padding: 2rem;
-            transition: transform 0.3s ease;
+            background: transparent;
+            border: none;
+            border-radius: 20px;
+            padding: 0;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: visible;
+            cursor: pointer;
+            transform: translateY(0);
+            perspective: 1000px;
+            aspect-ratio: 1;
+            margin: 0.5rem 0;
         }
 
         .why-item:hover {
-            transform: translateY(-10px);
+            transform: translateY(-8px) scale(1.02);
         }
 
-        .why-icon {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            display: inline-block;
-            background: linear-gradient(135deg, var(--white), var(--silver));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: shimmer 3s ease-in-out infinite;
+        .flip-card {
+            background: transparent;
+            width: 100%;
+            height: 100%;
+            perspective: 1000px;
         }
 
-        @keyframes shimmer {
-            0%, 100% { filter: brightness(1); }
-            50% { filter: brightness(1.5); }
-        }
-
-        .why-item h3 {
-            color: var(--white);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-        }
-
-        .why-item p {
-            color: var(--light-silver);
-            line-height: 1.6;
-        }
-
-
-
-        /* YouTube Showcase */
-        .youtube-section {
-            background: var(--gradient-dark);
-            border-radius: 30px;
-            padding: 4rem 3rem;
-            margin: 3rem 0;
-            text-align: center;
-        }
-
-        .video-container {
+        .flip-card-inner {
             position: relative;
             width: 100%;
-            max-width: 800px;
-            margin: 3rem auto;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            background: var(--black);
-            padding-top: 56.25%; /* 16:9 aspect ratio */
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
         }
 
-        .video-placeholder {
+        .flip-card.flipped .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .flip-card-front {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .flip-card-back {
+            background: rgba(255, 255, 255, 0.02);
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front::before, .flip-card-back::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .flip-card:hover .flip-card-front::before,
+        .flip-card:hover .flip-card-back::before {
+            left: 100%;
+        }
+
+        .flip-card-front::after, .flip-card-back::after {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
-            cursor: pointer;
-            transition: all 0.3s ease;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255, 255, 255, 0.1), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
         }
 
-        .video-placeholder:hover {
-            transform: scale(1.02);
+        .flip-card:hover .flip-card-front::after,
+        .flip-card:hover .flip-card-back::after {
+            opacity: 1;
         }
 
-        .play-button {
-            width: 80px;
-            height: 80px;
-            background: var(--white);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: var(--black);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
+        .flip-card-front p {
+            color: var(--white);
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.8;
+            margin: 0;
         }
 
-        .play-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
-        }
-
-        .video-stats {
-            display: flex;
-            justify-content: center;
-            gap: 3rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .video-stat {
+        .flip-card-back h3 {
+            color: var(--white);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            font-weight: 600;
+            transition: color 0.3s ease;
             text-align: center;
         }
 
-        .video-stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--white);
-            display: block;
+        .flip-card:hover .flip-card-back h3 {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
         }
 
-        .video-stat-label {
-            color: var(--silver);
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .flip-card-back p {
+            color: var(--light-silver);
+            line-height: 1.6;
+            font-size: 0.95rem;
+            text-align: center;
+            transition: color 0.3s ease;
+            margin: 0;
         }
+
+        .flip-card:hover .flip-card-back p {
+            color: #e0e0e0;
+        }
+
+        /* Staggered animation for items */
+        .why-item:nth-child(1) { animation-delay: 0.1s; }
+        .why-item:nth-child(2) { animation-delay: 0.2s; }
+        .why-item:nth-child(3) { animation-delay: 0.3s; }
+        .why-item:nth-child(4) { animation-delay: 0.4s; }
+        .why-item:nth-child(5) { animation-delay: 0.5s; }
+        .why-item:nth-child(6) { animation-delay: 0.6s; }
+        .why-item:nth-child(7) { animation-delay: 0.7s; }
+        .why-item:nth-child(8) { animation-delay: 0.8s; }
+        .why-item:nth-child(9) { animation-delay: 0.9s; }
+
+        /* Floating animation on load */
+        @keyframes floatIn {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .why-item {
+            animation: floatIn 0.8s ease-out backwards;
+        }
+
+        /* Enhanced Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .why-choose-us {
+                padding: 2rem 1.5rem;
+                margin: 2rem 0;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .why-item {
+                padding: 1.5rem;
+                border-radius: 15px;
+            }
+
+            .why-item:hover {
+                transform: translateY(-4px) scale(1.01);
+            }
+
+            .why-icon {
+                width: 50px;
+                height: 50px;
+                margin-bottom: 1rem;
+            }
+
+            .why-item h3 {
+                font-size: 1.2rem;
+            }
+
+            .why-item p {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .why-choose-us {
+                padding: 1.5rem 1rem;
+                border-radius: 20px;
+            }
+
+            .why-item {
+                padding: 1.25rem;
+            }
+
+            .why-icon {
+                width: 45px;
+                height: 45px;
+            }
+
+            .why-item h3 {
+                font-size: 1.1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .why-item p {
+                font-size: 0.85rem;
+                line-height: 1.5;
+            }
+        }
+
+        /* Performance Metrics Bars */
+        .performance-metrics {
+            margin-top: 8rem;
+            padding: 3rem 0;
+        }
+
+        .metrics-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .metric-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 1.5rem;
+        }
+
+        .metric-bar:nth-child(2) {
+            margin-right: 7rem;
+        }
+
+        .metric-bar:nth-child(3) {
+            margin-left: 3rem;
+        }
+
+        .bar-container {
+            height: 300px;
+            width: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar {
+            width: 100%;
+            border-radius: 10px;
+            position: relative;
+            transition: height 1s ease-out;
+            background: var(--dark-gray);
+        }
+
+        .bar-before {
+            background: var(--dark-gray);
+        }
+
+        .bar-after {
+            background: var(--dark-gray);
+        }
+
+        .bar-unstable {
+            /* Remove CSS animation, we'll handle this with JavaScript */
+        }
+
+        .bar-label {
+            margin-top: 1rem;
+            color: var(--white);
+            font-size: 0.9rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .bar-value {
+            margin-top: 0.5rem;
+            color: var(--light-silver);
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .metrics-container {
+                flex-direction: column;
+                gap: 3rem;
+            }
+
+            .metric-bar {
+                flex-direction: row;
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .bar-container {
+                height: 60px;
+                width: 200px;
+                margin-right: 1rem;
+            }
+
+            .bar-label, .bar-value {
+                margin-top: 0;
+                text-align: left;
+            }
+        }
+
+
+
 
         /* Reviews Section */
         .reviews-section {
@@ -621,10 +1031,37 @@
         }
 
         .reviews-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
+            overflow: hidden;
+            width: 100%;
             margin-top: 3rem;
+            position: relative;
+        }
+
+        .reviews-container::before,
+        .reviews-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100px;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .reviews-container::before {
+            left: 0;
+            background: linear-gradient(to right, var(--black), transparent);
+        }
+
+        .reviews-container::after {
+            right: 0;
+            background: linear-gradient(to left, var(--black), transparent);
+        }
+
+        .reviews-slider {
+            display: flex;
+            animation: slideLeft 40s linear infinite;
+            width: fit-content;
         }
 
         .review-card {
@@ -634,12 +1071,29 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             transition: all 0.3s ease;
+            min-width: 400px;
+            max-width: 400px;
+            margin-right: 2rem;
+            flex-shrink: 0;
         }
 
         .review-card:hover {
             transform: translateY(-5px);
             border-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .reviews-slider:hover {
+            animation-play-state: paused;
         }
 
         .review-stars {
@@ -746,7 +1200,7 @@
             line-height: 1.8;
         }
 
-        /* ad Button in sections */
+        /* Download Button in sections */
         .section-download {
             text-align: center;
             margin-top: 3rem;
@@ -868,8 +1322,42 @@
         }
 
         /* Responsive */
+        .nav-links {
+            display: none;
+        }
+
         @media (max-width: 768px) {
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .nav-left-section {
+                flex: none;
+            }
+
+            .nav-links-left,
+            .nav-links-right {
+                display: none;
+            }
+
+            .nav-right-section {
+                flex: none;
+            }
+
+            .nav-social-icons {
+                display: none;
+            }
+
+            .nav-center-section {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
             .nav-links {
+                display: flex;
                 position: absolute;
                 top: 100%;
                 left: 0;
@@ -882,16 +1370,14 @@
                 pointer-events: none;
                 transition: all 0.3s ease;
                 backdrop-filter: blur(20px);
+                list-style: none;
+                gap: 1rem;
             }
 
             .nav-links.active {
                 transform: translateY(0);
                 opacity: 1;
                 pointer-events: all;
-            }
-
-            .nav-social-icons {
-                display: none;
             }
 
             .menu-toggle {
@@ -913,9 +1399,14 @@
                 display: none;
             }
 
-            .features-grid,
-            .reviews-container {
+            .features-columns {
                 grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .review-card {
+                min-width: 300px;
+                max-width: 300px;
             }
 
             .feature-card:hover {
@@ -1030,6 +1521,130 @@
             animation-duration: 30s;
             animation-delay: -10s;
         }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer responsive */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1054,23 +1669,42 @@
     <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
-            <a href="#home" class="logo">BANDIT</a>
-            <div class="nav-social-icons">
-                <a href="#" class="social-icon-nav" title="Discord">💬</a>
-                <a href="#" class="social-icon-nav" title="Twitter">🐦</a>
-                <a href="#" class="social-icon-nav" title="YouTube">📺</a>
+            <!-- Left Section -->
+            <div class="nav-section nav-left-section">
+                <a href="#home" class="logo"><span class="shiny-text">BANDIT</span></a>
+                <ul class="nav-links-left">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#why-us">Why Us</a></li>
+                    <li><a href="#reviews">Reviews</a></li>
+                </ul>
             </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#features">Features</a></li>
-                <li><a href="#why-us">Why Us</a></li>
-                <li><a href="#showcase">Showcase</a></li>
-                <li><a href="#reviews">Reviews</a></li>
-                <li><a href="#faq">FAQ</a></li>
-            </ul>
-            <div class="menu-toggle" id="menuToggle">
-                <span></span>
-                <span></span>
-                <span></span>
+            
+            <!-- Center Section -->
+            <div class="nav-section nav-center-section">
+                <div class="shop-container">
+                    <a href="shop.html" class="shop-button" title="Shop">
+                        <img src="shop.png" alt="Shop" width="24" height="24">
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Right Section -->
+            <div class="nav-section nav-right-section">
+                <ul class="nav-links-right">
+                    <li><a href="showcase.html">Showcase</a></li>
+                    <li><a href="bios.html">Bios</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                </ul>
+                <div class="nav-social-icons">
+                    <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                    <a href="https://x.com/Bandit1251291" class="social-icon-nav" title="Twitter"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                    <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+                </div>
+                <div class="menu-toggle" id="menuToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </div>
     </nav>
@@ -1100,218 +1734,338 @@
 
     <!-- Features Section -->
     <section id="features">
-        <h2 class="section-title fade-in">Powerful Features</h2>
-        <div class="features-grid">
-            <div class="feature-card fade-in">
-                <span class="feature-icon">⚡</span>
-                <h3>Performance Boost</h3>
-                <p>Advanced CPU and GPU optimization algorithms that squeeze every bit of performance from your hardware. Real-time monitoring and automatic adjustments ensure peak performance.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <span class="feature-icon">🛡️</span>
-                <h3>Privacy Shield</h3>
-                <p>Comprehensive privacy controls to disable telemetry, block trackers, and secure your system. Take back control of your data with military-grade protection.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <span class="feature-icon">🎨</span>
-                <h3>UI Revolution</h3>
-                <p>Transform your Windows interface with deep customization options. Modify system colors, transparency effects, animations, and create your perfect desktop environment.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <span class="feature-icon">🔧</span>
-                <h3>System Control</h3>
-                <p>Access hundreds of hidden Windows settings and registry tweaks through an intuitive interface. No more manual registry editing - everything is automated and safe.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <span class="feature-icon">🚀</span>
-                <h3>Boot Optimizer</h3>
-                <p>Take control of your boot process with advanced startup management. Disable unnecessary services, optimize boot order, and achieve lightning-fast startup times.</p>
-            </div>
-            <div class="feature-card fade-in">
-                <span class="feature-icon">📊</span>
-                <h3>Live Analytics</h3>
-                <p>Comprehensive system monitoring with beautiful graphs and statistics. Track CPU, RAM, GPU, disk usage, and network activity with millisecond precision.</p>
+        <h2 class="section-title fade-in"><span class="shiny-text">Powerful Features</span></h2>
+        <div class="features-comparison fade-in">
+            <div class="features-columns">
+                <div class="features-column">
+                    <h3>BANDIT's Powerful Features:</h3>
+                    <ul class="features-list has-features">
+                        <li>Debloat your system</li>
+                        <li>Lower your processes</li>
+                        <li>Lower your system delay</li>
+                        <li>Apply the best Game Settings</li>
+                        <li>Network optimizations</li>
+                        <li>Power optimizations</li>
+                        <li>Privacy optimizations</li>
+                        <li>Appearance Tweaks</li>
+                        <li>GPU optimizations</li>
+                        <li>Extensive Cleanup</li>
+                        <li>Useful Programs</li>
+                        <li>Registry Tweaks</li>
+                        <li>Desktop & Laptop Compatible</li>
+                        <li>Best custom power plan</li>
+                        <li>Best Game User Settings</li>
+                        <li>And WAY More</li>
+                    </ul>
+                </div>
+                <div class="features-column">
+                    <h3>Features BANDIT Doesn't Have:</h3>
+                    <ul class="features-list lacks-features">
+                        <li>No automatic bios optimizations... (Yet)</li>
+                        <li>No overclocking... (Yet)</li>
+                        <li>No AMD GPU tweaks... (Yet)</li>
+                        <li>Can't cook you a meal...</li>
+                    </ul>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Why Choose Us Section -->
     <section id="why-us">
-        <h2 class="section-title fade-in">Why Choose Bandit?</h2>
-        <div class="why-choose-us fade-in">
+        <h2 class="section-title fade-in"><span class="shiny-text">Why Choose Bandit?</span></h2>
             <div class="why-grid">
-                <div class="why-item">
-                    <span class="why-icon">🎯</span>
-                    <h3>Precision Engineering</h3>
-                    <p>Every optimization is carefully tested and implemented with instant rollback options. Your system's stability is our priority.</p>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Living Software</h3>
+                            <p>Continuous updates ensure compatibility with the latest Windows builds and security patches.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="why-item">
-                    <span class="why-icon">💡</span>
-                    <h3>AI-Powered Intelligence</h3>
-                    <p>Machine learning algorithms analyze your usage patterns to provide personalized optimization recommendations.</p>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>No Overpriced Tweaks</h3>
+                            <p>Seriously, check our prices against the competition. You'll get the same advanced features for way less money.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="why-item">
-                    <span class="why-icon">🔄</span>
-                    <h3>Living Software</h3>
-                    <p>Continuous updates ensure compatibility with the latest Windows builds and security patches.</p>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Actually Advanced Tweaks</h3>
+                            <p>Not just basic registry cleaners and temp file deleters. We're talking real system optimization that makes a difference.</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="why-item">
-                    <span class="why-icon">🛡️</span>
-                    <h3>Safe & Secure</h3>
-                    <p>All changes are reversible with automatic backup points created before major modifications.</p>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Updates All The Time</h3>
+                            <p>We're constantly pushing new stuff. Like, actually frequently, not just saying we will and then disappearing for months.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>We Don't Sit On Our Hands</h3>
+                            <p>New features drop regularly because we actually care about keeping the software current.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="why-item flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <p>Click me...</p>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Clean and Safe</h3>
+                            <p>"Virus scanner" shows no virus detected, and "Nord VPN" confirms BanditLauncherSetup.exe shows no signs of virus or malware signatures. Don't believe us? Check for yourself! (Beware of false-positives)</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+            
+            <!-- Performance Metrics Bars -->
+            <div class="performance-metrics">
+                <div class="metrics-container">
+                    <div class="metric-bar">
+                        <div class="bar-container">
+                            <div class="bar bar-before bar-unstable" data-height="80"></div>
+                        </div>
+                        <div class="bar-label">Latency on Stock Windows</div>
+                        <div class="bar-value">12ms</div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="bar-container">
+                            <div class="bar bar-after bar-stable-latency" data-height="30"></div>
+                        </div>
+                        <div class="bar-label">Latency After Using Bandit</div>
+                        <div class="bar-value">3ms</div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="bar-container">
+                            <div class="bar bar-before bar-unstable-fps" data-height="60"></div>
+                        </div>
+                        <div class="bar-label">FPS on Stock Windows</div>
+                        <div class="bar-value">75 FPS</div>
+                    </div>
+                    <div class="metric-bar">
+                        <div class="bar-container">
+                            <div class="bar bar-after bar-stable-fps" data-height="95"></div>
+                        </div>
+                        <div class="bar-label">FPS After Using Bandit</div>
+                        <div class="bar-value">142 FPS</div>
+                    </div>
+                </div>
+            </div>
     </section>
 
-    <!-- YouTube Showcase -->
-    <section id="showcase" class="youtube-section">
-        <h2 class="section-title">See Bandit in Action</h2>
-        <p style="color: var(--silver); margin-bottom: 3rem;">Watch our comprehensive walkthrough and see the power of Bandit</p>
-        <div class="video-container">
-            <div class="video-placeholder" onclick="playVideo()">
-                <div class="play-button">▶</div>
-            </div>
-        </div>
-        <div class="video-stats">
-            <div class="video-stat">
-                <span class="video-stat-number">1.2M</span>
-                <span class="video-stat-label">Views</span>
-            </div>
-            <div class="video-stat">
-                <span class="video-stat-number">45K</span>
-                <span class="video-stat-label">Likes</span>
-            </div>
-            <div class="video-stat">
-                <span class="video-stat-number">2.5K</span>
-                <span class="video-stat-label">Comments</span>
-            </div>
-        </div>
-    </section>
 
     <!-- Reviews Section -->
     <section id="reviews" class="reviews-section">
-        <h2 class="section-title fade-in">What Users Say</h2>
+        <h2 class="section-title fade-in"><span class="shiny-text">What Users Say</span></h2>
         <div class="reviews-container">
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Bandit completely transformed my PC. My games run smoother, boot time is cut in half, and I finally have control over Windows telemetry. Absolutely essential tool!"</p>
-                <div class="review-author">
-                    <div class="author-avatar">JD</div>
-                    <div class="author-info">
-                        <span class="author-name">John Davis</span>
-                        <span class="author-title">Power User</span>
+            <div class="reviews-slider">
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Bandit completely transformed my PC. My games run smoother, boot time is cut in half, and I finally have control over Windows telemetry. Absolutely essential tool!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <span class="author-name">John Davis</span>
+                            <span class="author-title">Power User</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"As a developer, I need my system running at peak performance. Bandit delivers exactly that with its intelligent optimization and real-time monitoring. Can't work without it!"</p>
-                <div class="review-author">
-                    <div class="author-avatar">SK</div>
-                    <div class="author-info">
-                        <span class="author-name">Sarah Kim</span>
-                        <span class="author-title">Software Developer</span>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"As a developer, I need my system running at peak performance. Bandit delivers exactly that with its intelligent optimization and real-time monitoring. Can't work without it!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">SK</div>
+                        <div class="author-info">
+                            <span class="author-name">Sarah Kim</span>
+                            <span class="author-title">Software Developer</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"The UI customization features are incredible. I've created a completely personalized Windows experience. Plus, the privacy controls give me peace of mind."</p>
-                <div class="review-author">
-                    <div class="author-avatar">MT</div>
-                    <div class="author-info">
-                        <span class="author-name">Mike Thompson</span>
-                        <span class="author-title">Designer</span>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"The UI customization features are incredible. I've created a completely personalized Windows experience. Plus, the privacy controls give me peace of mind."</p>
+                    <div class="review-author">
+                        <div class="author-avatar">MT</div>
+                        <div class="author-info">
+                            <span class="author-name">Mike Thompson</span>
+                            <span class="author-title">Designer</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Been using Bandit for 6 months now. The regular updates and new features keep getting better. Support team is incredibly responsive too!"</p>
-                <div class="review-author">
-                    <div class="author-avatar">EW</div>
-                    <div class="author-info">
-                        <span class="author-name">Emma Wilson</span>
-                        <span class="author-title">IT Professional</span>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Been using Bandit for 6 months now. The regular updates and new features keep getting better. Support team is incredibly responsive too!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">EW</div>
+                        <div class="author-info">
+                            <span class="author-name">Emma Wilson</span>
+                            <span class="author-title">IT Professional</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Game changer for streaming! My OBS runs flawlessly now, and the system resource management is outstanding. Every streamer needs this!"</p>
-                <div class="review-author">
-                    <div class="author-avatar">AC</div>
-                    <div class="author-info">
-                        <span class="author-name">Alex Chen</span>
-                        <span class="author-title">Content Creator</span>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Game changer for streaming! My OBS runs flawlessly now, and the system resource management is outstanding. Every streamer needs this!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">AC</div>
+                        <div class="author-info">
+                            <span class="author-name">Alex Chen</span>
+                            <span class="author-title">Content Creator</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="review-card fade-in">
-                <div class="review-stars">★★★★★</div>
-                <p class="review-text">"Skeptical at first, but Bandit proved me wrong. Safe, effective, and actually delivers on its promises. My laptop feels like a new machine!"</p>
-                <div class="review-author">
-                    <div class="author-avatar">RP</div>
-                    <div class="author-info">
-                        <span class="author-name">Rachel Park</span>
-                        <span class="author-title">Student</span>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Skeptical at first, but Bandit proved me wrong. Safe, effective, and actually delivers on its promises. My laptop feels like a new machine!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">RP</div>
+                        <div class="author-info">
+                            <span class="author-name">Rachel Park</span>
+                            <span class="author-title">Student</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="section-download">
-            <a href="#" class="download-btn" onclick="downloadBandit()">
-                <span>⬇</span> Download Bandit Now
-            </a>
-            <div class="download-counter">
-                <span class="download-number" id="downloadCount2">0</span> downloads
+                <!-- Duplicate cards for seamless loop -->
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Bandit completely transformed my PC. My games run smoother, boot time is cut in half, and I finally have control over Windows telemetry. Absolutely essential tool!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">JD</div>
+                        <div class="author-info">
+                            <span class="author-name">John Davis</span>
+                            <span class="author-title">Power User</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"As a developer, I need my system running at peak performance. Bandit delivers exactly that with its intelligent optimization and real-time monitoring. Can't work without it!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">SK</div>
+                        <div class="author-info">
+                            <span class="author-name">Sarah Kim</span>
+                            <span class="author-title">Software Developer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"The UI customization features are incredible. I've created a completely personalized Windows experience. Plus, the privacy controls give me peace of mind."</p>
+                    <div class="review-author">
+                        <div class="author-avatar">MT</div>
+                        <div class="author-info">
+                            <span class="author-name">Mike Thompson</span>
+                            <span class="author-title">Designer</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Been using Bandit for 6 months now. The regular updates and new features keep getting better. Support team is incredibly responsive too!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">EW</div>
+                        <div class="author-info">
+                            <span class="author-name">Emma Wilson</span>
+                            <span class="author-title">IT Professional</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Game changer for streaming! My OBS runs flawlessly now, and the system resource management is outstanding. Every streamer needs this!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">AC</div>
+                        <div class="author-info">
+                            <span class="author-name">Alex Chen</span>
+                            <span class="author-title">Content Creator</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"Skeptical at first, but Bandit proved me wrong. Safe, effective, and actually delivers on its promises. My laptop feels like a new machine!"</p>
+                    <div class="review-author">
+                        <div class="author-avatar">RP</div>
+                        <div class="author-info">
+                            <span class="author-name">Rachel Park</span>
+                            <span class="author-title">Student</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section id="faq">
-        <h2 class="section-title fade-in">Frequently Asked Questions</h2>
-        <div class="faq-container">
-            <div class="faq-item fade-in">
-                <div class="faq-question">Is Bandit safe to use?</div>
-                <div class="faq-answer">
-                    <p>Absolutely! Bandit is designed with safety as the top priority. Every change can be reverted, and we create automatic restore points before major modifications. The tool is regularly scanned for malware and is digitally signed.</p>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/Bandit1251291" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="showcase.html">Showcase</a>
+                        <a href="bios.html">Bios</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Warranty</a>
+                        <a href="#">Disclaimer</a>
+                    </div>
                 </div>
             </div>
-            <div class="faq-item fade-in">
-                <div class="faq-question">Will Bandit void my warranty?</div>
-                <div class="faq-answer">
-                    <p>No, Bandit only makes software-level changes that are completely reversible. It doesn't modify any hardware or firmware settings that could affect your warranty. All tweaks are within Microsoft's acceptable use guidelines.</p>
-                </div>
-            </div>
-            <div class="faq-item fade-in">
-                <div class="faq-question">Can I use Bandit on multiple computers?</div>
-                <div class="faq-answer">
-                    <p>Yes! Bandit is free for personal use on unlimited devices. For commercial use or deployment in business environments, please contact us for a business license.</p>
-                </div>
-            </div>
-            <div class="faq-item fade-in">
-                <div class="faq-question">Does Bandit work with Windows 11?</div>
-                <div class="faq-answer">
-                    <p>Yes! Bandit is fully compatible with Windows 11 and receives regular updates to support new Windows features. It also maintains backward compatibility with Windows 10.</p>
-                </div>
-            </div>
-            <div class="faq-item fade-in">
-                <div class="faq-question">How often is Bandit updated?</div>
-                <div class="faq-answer">
-                    <p>We release updates every 2-4 weeks with new features, optimizations, and compatibility improvements. Critical security updates are pushed immediately when needed.</p>
-                </div>
-            </div>
-            <div class="faq-item fade-in">
-                <div class="faq-question">Can I contribute to Bandit's development?</div>
-                <div class="faq-answer">
-                    <p>We welcome community contributions! Join our Discord server to connect with the development team, suggest features, report bugs, or contribute to our open-source modules on GitHub.</p>
-                </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
             </div>
         </div>
-    </section>
+    </footer>
 
     <script>
         // Matrix rain effect
@@ -1494,12 +2248,41 @@
             navLinks.classList.toggle('active');
         });
 
+        // Create mobile menu from left and right nav items
+        function createMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            if (!navLinks) {
+                const mobileNav = document.createElement('ul');
+                mobileNav.id = 'navLinks';
+                mobileNav.className = 'nav-links';
+                
+                // Add all navigation items to mobile menu
+                const leftItems = document.querySelectorAll('.nav-links-left a');
+                const rightItems = document.querySelectorAll('.nav-links-right a');
+                
+                [...leftItems, ...rightItems].forEach(link => {
+                    const li = document.createElement('li');
+                    li.innerHTML = link.outerHTML;
+                    mobileNav.appendChild(li);
+                });
+                
+                document.querySelector('.nav-container').appendChild(mobileNav);
+            }
+        }
+
+        // Initialize mobile menu on page load
+        createMobileMenu();
+
         // Close mobile menu when link clicked
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-            });
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-links a')) {
+                const menuToggle = document.getElementById('menuToggle');
+                const navLinks = document.getElementById('navLinks');
+                if (menuToggle && navLinks) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            }
         });
 
         // FAQ toggle
@@ -1531,7 +2314,21 @@
             });
         });
 
-       
+        // Download function
+        function downloadBandit() {
+            const btn = event.currentTarget;
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<span>⏳</span> Preparing Download...';
+            btn.style.pointerEvents = 'none';
+            
+            setTimeout(() => {
+                btn.innerHTML = '<span>✓</span> Redirecting to Shop...';
+                updateDownloadCount(); // Increment counter on download
+                setTimeout(() => {
+                    window.location.href = 'shop.html';
+                }, 1000);
+            }, 1500);
+        }
 
         // Play video function
         function playVideo() {
@@ -1589,6 +2386,186 @@
                 shape.style.transform = `translate(${xPos}px, ${yPos}px)`;
             });
         });
-    </script>
-</body>
-</html>
+
+        // Function to update bar gradient based on height
+        function updateBarGradient(bar) {
+            const height = parseFloat(bar.style.height) || 0;
+            const heightPercent = height / 100;
+            
+            // Check if this is a latency bar (lower values are better)
+            const isLatencyBar = bar.classList.contains('bar-unstable') || bar.classList.contains('bar-stable-latency');
+            
+            if (isLatencyBar) {
+                // For latency bars: reverse logic - white at bottom, darker at top
+                // Custom gradient mapping: 0-30% stays white, 30-50% to gray, 50-80% very gray, 80%+ dark gray
+                let topColor;
+                if (heightPercent <= 0.3) {
+                    // 0-30%: stay white
+                    topColor = 'rgb(255, 255, 255)';
+                } else if (heightPercent <= 0.5) {
+                    // 30-50%: transition from white to gray
+                    const progress = (heightPercent - 0.3) / 0.2; // 0 to 1
+                    const grayValue = Math.round(255 - (255 - 128) * progress);
+                    topColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+                } else if (heightPercent <= 0.8) {
+                    // 50-80%: transition from gray to very gray
+                    const progress = (heightPercent - 0.5) / 0.3; // 0 to 1
+                    const grayValue = Math.round(128 - (128 - 80) * progress);
+                    topColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+                } else {
+                    // 80%+: dark gray
+                    const progress = (heightPercent - 0.8) / 0.2; // 0 to 1
+                    const grayValue = Math.round(80 - (80 - 50) * progress);
+                    topColor = `rgb(${grayValue}, ${grayValue}, ${grayValue})`;
+                }
+                bar.style.background = `linear-gradient(to top, var(--white) 0%, ${topColor} 100%)`;
+            } else {
+                // For FPS bars: normal logic - dark gray at bottom, lighter at top
+                // At 0% height: dark gray
+                // At 100% height: white
+                const topColor = `rgb(${Math.round(128 + (255 - 128) * heightPercent)}, ${Math.round(128 + (255 - 128) * heightPercent)}, ${Math.round(128 + (255 - 128) * heightPercent)})`;
+                bar.style.background = `linear-gradient(to top, var(--dark-gray) 0%, ${topColor} 100%)`;
+            }
+        }
+
+        // Flip card functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const flipCards = document.querySelectorAll('.flip-card');
+            
+            flipCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('flipped');
+                });
+            });
+
+            // Animate performance bars
+            const bars = document.querySelectorAll('.bar');
+            bars.forEach(bar => {
+                const height = bar.dataset.height;
+                if (!bar.classList.contains('bar-unstable') && !bar.classList.contains('bar-unstable-fps') && !bar.classList.contains('bar-stable-fps') && !bar.classList.contains('bar-stable-latency')) {
+                    setTimeout(() => {
+                        bar.style.height = height + '%';
+                    }, 500);
+                } else if (bar.classList.contains('bar-unstable')) {
+                    // Handle unstable latency bar
+                    animateUnstableBar(bar);
+                } else if (bar.classList.contains('bar-unstable-fps')) {
+                    // Handle unstable FPS bar
+                    animateUnstableFpsBar(bar);
+                } else if (bar.classList.contains('bar-stable-fps')) {
+                    // Handle stable FPS bar (Bandit)
+                    animateStableFpsBar(bar);
+                } else if (bar.classList.contains('bar-stable-latency')) {
+                    // Handle stable latency bar (Bandit)
+                    animateStableLatencyBar(bar);
+                }
+            });
+
+            function animateUnstableBar(bar) {
+                const valueElement = bar.closest('.metric-bar').querySelector('.bar-value');
+                
+                function randomizeHeight() {
+                    // Random height between 70% and 95% with 1% increments
+                    const minHeight = 70;
+                    const maxHeight = 95;
+                    const randomHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+                    bar.style.height = randomHeight + '%';
+                    updateBarGradient(bar);
+                    
+                    // Map height to ms value (70% = 20ms, 95% = 35ms)
+                    const minMs = 20;
+                    const maxMs = 35;
+                    const msValue = Math.round(minMs + ((randomHeight - minHeight) / (maxHeight - minHeight)) * (maxMs - minMs));
+                    valueElement.textContent = msValue + 'ms';
+                }
+                
+                // Start animation after initial delay
+                setTimeout(() => {
+                    randomizeHeight();
+                    // Continue randomizing every 50-150ms for much faster updates
+                    setInterval(() => {
+                        randomizeHeight();
+                    }, Math.random() * 100 + 50);
+                }, 500);
+            }
+
+            function animateUnstableFpsBar(bar) {
+                const valueElement = bar.closest('.metric-bar').querySelector('.bar-value');
+                
+                function randomizeHeight() {
+                    // Random height between 10% and 45% with 1% increments
+                    const minHeight = 10;
+                    const maxHeight = 45;
+                    let randomHeight;
+                    
+                    // 2.5% chance to go lower than 35%, 97.5% chance to stay at 35% or higher
+                    if (Math.random() < 0.025) {
+                        // 2.5% chance: can go anywhere from 10% to 45%
+                        randomHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
+                        // Remove transition for instant change when hitting the 2.5% chance
+                        bar.style.transition = 'none';
+                    } else {
+                        // 97.5% chance: stay between 35% and 45%
+                        randomHeight = Math.floor(Math.random() * (maxHeight - 35 + 1)) + 35;
+                        // Normal transition for regular changes
+                        bar.style.transition = 'height 0.1s ease-out';
+                    }
+                    
+                    bar.style.height = randomHeight + '%';
+                    updateBarGradient(bar);
+                    
+                    // Map height to FPS value (10% = 40 FPS, 45% = 140 FPS)
+                    const minFps = 40;
+                    const maxFps = 140;
+                    const fpsValue = Math.round(minFps + ((randomHeight - minHeight) / (maxHeight - minHeight)) * (maxFps - minFps));
+                    valueElement.textContent = fpsValue + ' FPS';
+                }
+                
+                // Start animation after initial delay
+                setTimeout(() => {
+                    randomizeHeight();
+                    // Continue randomizing every 100-150ms
+                    setInterval(() => {
+                        randomizeHeight();
+                    }, Math.random() * 50 + 100);
+                }, 500);
+            }
+
+            function animateStableFpsBar(bar) {
+                const valueElement = bar.closest('.metric-bar').querySelector('.bar-value');
+                let currentFps = 308; // Start with a middle value
+                
+                function updateFps() {
+                    // Random FPS between 297 and 320 with 1 FPS increments
+                    const minFps = 297;
+                    const maxFps = 320;
+                    currentFps = Math.floor(Math.random() * (maxFps - minFps + 1)) + minFps;
+                    valueElement.textContent = currentFps + ' FPS';
+                }
+                
+                function updateBarHeight() {
+                    // Map FPS value to height (297 FPS = 87%, 320 FPS = 97%)
+                    const minFps = 297;
+                    const maxFps = 320;
+                    const minHeight = 87;
+                    const maxHeight = 97;
+                    const barHeight = Math.round(minHeight + ((currentFps - minFps) / (maxFps - minFps)) * (maxHeight - minHeight));
+                    bar.style.height = barHeight + '%';
+                    updateBarGradient(bar);
+                }
+                
+                // Start animation after initial delay
+                setTimeout(() => {
+                    updateFps();
+                    updateBarHeight();
+                    
+                    // Update FPS every 25ms
+                    setInterval(() => {
+                        updateFps();
+                    }, 25);
+                    
+                    // Update bar height every 75ms
+                    setInterval(() => {
+                        updateBarHeight();
+                    }, 75);
+                },
