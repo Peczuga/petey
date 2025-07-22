@@ -60,72 +60,15 @@
             margin: 0 auto;
             padding: 1rem 2rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            height: 80px;
-        }
-
-        .nav-section {
-            flex: 1;
-            display: flex;
-            align-items: center;
-        }
-
-        .nav-left-section {
-            justify-content: flex-start;
-        }
-
-        .nav-center-section {
-            justify-content: center;
-        }
-
-        .nav-right-section {
-            justify-content: flex-end;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--white);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            letter-spacing: 3px;
             position: relative;
-            margin-right: 2rem;
-        }
-
-        .logo::after {
-            content: 'BANDIT';
-            position: absolute;
-            top: 0;
-            left: 0;
-            color: transparent;
-            -webkit-text-stroke: 1px var(--white);
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        .logo:hover::after {
-            opacity: 1;
-            transform: translate(3px, 3px);
-        }
-
-        .nav-links-left,
-        .nav-links-right {
-            display: flex;
-            list-style: none;
-            gap: 2rem;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-        }
-
-        .nav-links-right {
-            margin-right: 2rem;
         }
 
         .nav-social-icons {
             display: flex;
             gap: 1rem;
+            margin-left: 2rem;
         }
 
         .social-icon-nav {
@@ -152,8 +95,79 @@
             filter: brightness(0) invert(1) opacity(1);
         }
 
-        .nav-links-left a,
-        .nav-links-right a {
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'BANDIT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--white);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo:hover::after {
+            opacity: 1;
+            transform: translate(3px, 3px);
+        }
+
+        .nav-left {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1;
+            padding-left: 3rem;
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+        }
+
+        .nav-item {
+            margin: 0 1.5rem;
+        }
+
+
+        .nav-links a,
+        .nav-left a,
+        .nav-right a,
+        .nav-center-links a,
+        .nav-item a {
             color: var(--light-silver) !important;
             text-decoration: none !important;
             transition: all 0.3s ease;
@@ -161,8 +175,11 @@
             padding: 0.5rem 0;
         }
 
-        .nav-links-left a::before,
-        .nav-links-right a::before {
+        .nav-links a::before,
+        .nav-left a::before,
+        .nav-right a::before,
+        .nav-center-links a::before,
+        .nav-item a::before {
             content: '';
             position: absolute;
             bottom: 0;
@@ -173,16 +190,54 @@
             transition: width 0.3s ease;
         }
 
-        .nav-links-left a:hover::before,
-        .nav-links-right a:hover::before {
+        .nav-links a:hover::before,
+        .nav-left a:hover::before,
+        .nav-right a:hover::before,
+        .nav-center-links a:hover::before,
+        .nav-item a:hover::before,
+        .nav-links a.active::before,
+        .nav-left a.active::before,
+        .nav-right a.active::before,
+        .nav-center-links a.active::before,
+        .nav-item a.active::before {
             width: 100%;
         }
 
-        .nav-links-left a:hover,
-        .nav-links-right a:hover {
+        .nav-links a:hover,
+        .nav-left a:hover,
+        .nav-right a:hover,
+        .nav-center-links a:hover,
+        .nav-item a:hover,
+        .nav-links a.active,
+        .nav-left a.active,
+        .nav-right a.active,
+        .nav-center-links a.active,
+        .nav-item a.active {
             color: var(--white) !important;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
+
+        .nav-divider {
+            position: relative;
+        }
+
+        .nav-divider::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 2px,
+                var(--light-silver) 2px,
+                var(--light-silver) 4px
+            );
+        }
+
 
         .shop-container {
             display: flex;
@@ -191,35 +246,44 @@
         }
 
         .shop-button {
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            padding: 0.5rem 0;
+            background: transparent;
+            border: none;
+            border-radius: 0;
             transition: all 0.3s ease;
             text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: auto;
+            height: auto;
+            backdrop-filter: none;
+            box-shadow: none;
         }
 
         .shop-button:hover {
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateY(-4px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            backdrop-filter: blur(15px);
+            background: transparent;
+            transform: translateY(-2px);
+            box-shadow: none;
+            backdrop-filter: none;
         }
 
-        .shop-button img {
+        .nav-item img {
             filter: brightness(0) invert(1) opacity(0.8);
             transition: all 0.3s ease;
         }
 
-        .shop-button:hover img {
+        .nav-item a:hover img {
             filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
         }
 
         /* Hero Section with Particles */
@@ -1330,27 +1394,13 @@
             .nav-container {
                 display: flex;
                 justify-content: space-between;
-                align-items: center;
             }
 
-            .nav-left-section {
-                flex: none;
-            }
-
-            .nav-links-left,
-            .nav-links-right {
+            .nav-left, .nav-right {
                 display: none;
             }
 
-            .nav-right-section {
-                flex: none;
-            }
-
-            .nav-social-icons {
-                display: none;
-            }
-
-            .nav-center-section {
+            .nav-center {
                 position: absolute;
                 left: 50%;
                 transform: translateX(-50%);
@@ -1378,6 +1428,14 @@
                 transform: translateY(0);
                 opacity: 1;
                 pointer-events: all;
+            }
+
+            .nav-divider::before {
+                display: none;
+            }
+
+            .nav-social-icons {
+                display: none;
             }
 
             .menu-toggle {
@@ -1669,42 +1727,25 @@
     <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
-            <!-- Left Section -->
-            <div class="nav-section nav-left-section">
-                <a href="#home" class="logo"><span class="shiny-text">BANDIT</span></a>
-                <ul class="nav-links-left">
-                    <li><a href="#features">Features</a></li>
-                    <li><a href="#why-us">Why Us</a></li>
-                    <li><a href="#reviews">Reviews</a></li>
-                </ul>
+            <a href="#home" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="#features">Features</a></div>
+                <div class="nav-item"><a href="#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="#faq">FAQ</a></div>
             </div>
-            
-            <!-- Center Section -->
-            <div class="nav-section nav-center-section">
-                <div class="shop-container">
-                    <a href="shop.html" class="shop-button" title="Shop">
-                        <img src="shop.png" alt="Shop" width="24" height="24">
-                    </a>
-                </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" target="_blank" class="social-icon-nav" title="Twitter"><img src="twitter.png" alt="Twitter" style="cursor: pointer;" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
             </div>
-            
-            <!-- Right Section -->
-            <div class="nav-section nav-right-section">
-                <ul class="nav-links-right">
-                    <li><a href="showcase.html">Showcase</a></li>
-                    <li><a href="bios.html">Bios</a></li>
-                    <li><a href="faq.html">FAQ</a></li>
-                </ul>
-                <div class="nav-social-icons">
-                    <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord"><img src="discord.png" alt="Discord" width="32" height="32"></a>
-                    <a href="https://x.com/Bandit1251291" class="social-icon-nav" title="Twitter"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
-                    <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
-                </div>
-                <div class="menu-toggle" id="menuToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
             </div>
         </div>
     </nav>
@@ -2036,7 +2077,7 @@
                     <h3>Social</h3>
                     <div class="footer-links">
                         <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
-                        <a href="https://x.com/Bandit1251291" class="footer-social">Twitter</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
                         <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
                     </div>
                 </div>
@@ -2045,18 +2086,17 @@
                     <h3>Support</h3>
                     <div class="footer-links">
                         <a href="faq.html">FAQ</a>
-                        <a href="showcase.html">Showcase</a>
-                        <a href="bios.html">Bios</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
                     </div>
                 </div>
                 
                 <div class="footer-section">
                     <h3>Legal</h3>
                     <div class="footer-links">
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#">Warranty</a>
-                        <a href="#">Disclaimer</a>
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
                     </div>
                 </div>
             </div>
@@ -2257,8 +2297,8 @@
                 mobileNav.className = 'nav-links';
                 
                 // Add all navigation items to mobile menu
-                const leftItems = document.querySelectorAll('.nav-links-left a');
-                const rightItems = document.querySelectorAll('.nav-links-right a');
+                const leftItems = document.querySelectorAll('.nav-left a');
+                const rightItems = document.querySelectorAll('.nav-right a');
                 
                 [...leftItems, ...rightItems].forEach(link => {
                     const li = document.createElement('li');
@@ -2283,6 +2323,28 @@
                     navLinks.classList.remove('active');
                 }
             }
+        });
+
+        // Active navigation based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-item a[href^="#"]');
+            
+            let currentSection = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSection}`) {
+                    link.classList.add('active');
+                }
+            });
         });
 
         // FAQ toggle
@@ -2568,4 +2630,50 @@
                     setInterval(() => {
                         updateBarHeight();
                     }, 75);
-                },
+                }, 500);
+            }
+
+            function animateStableLatencyBar(bar) {
+                const valueElement = bar.closest('.metric-bar').querySelector('.bar-value');
+                let currentMs = 3; // Start with a middle value
+                
+                function updateMs() {
+                    // Random ms between 1 and 6 with 1ms increments
+                    const minMs = 1;
+                    const maxMs = 6;
+                    currentMs = Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
+                    valueElement.textContent = currentMs + 'ms';
+                }
+                
+                function updateBarHeight() {
+                    // Map ms value to height (1ms = 5%, 6ms = 20%)
+                    const minMs = 1;
+                    const maxMs = 6;
+                    const minHeight = 5;
+                    const maxHeight = 20;
+                    const barHeight = Math.round(minHeight + ((currentMs - minMs) / (maxMs - minMs)) * (maxHeight - minHeight));
+                    bar.style.height = barHeight + '%';
+                    updateBarGradient(bar);
+                }
+                
+                // Start animation after initial delay
+                setTimeout(() => {
+                    updateMs();
+                    updateBarHeight();
+                    
+                    // Update ms every 25ms
+                    setInterval(() => {
+                        updateMs();
+                    }, 25);
+                    
+                    // Update bar height every 25ms
+                    setInterval(() => {
+                        updateBarHeight();
+                    }, 25);
+                }, 500);
+            }
+        });
+
+    </script>
+</body>
+</html>
