@@ -25,12 +25,17 @@
             --glow: #ffffff;
         }
 
-        body {
+        body, html {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: var(--black);
             color: var(--light-silver);
             line-height: 1.6;
             overflow-x: hidden;
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        body.force-cursor-update {
+            cursor: url('image2.cur'), auto !important;
         }
 
         /* Smooth scrolling */
@@ -83,6 +88,7 @@
             padding: 0.5rem;
             z-index: 10002 !important;
             pointer-events: auto !important;
+            cursor: url('image3.cur'), pointer;
         }
 
         .social-icon-nav:hover {
@@ -264,6 +270,7 @@
             height: auto;
             backdrop-filter: none;
             box-shadow: none;
+            cursor: url('image3.cur'), pointer;
         }
 
         .shop-button:hover {
@@ -417,6 +424,7 @@
             overflow: hidden;
             text-transform: uppercase;
             letter-spacing: 1px;
+            cursor: url('image3.cur'), pointer;
         }
 
         .btn::before {
@@ -1293,6 +1301,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: url('image3.cur'), pointer;
         }
 
         @keyframes pulse {
@@ -1707,6 +1716,64 @@
             .footer-links a::before {
                 display: none;
             }
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+
+        /* Custom scrollbar styles */
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 10px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 8px;
+          border: 2px solid #444;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Firefox */
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+
+        body {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
         }
     </style>
 </head>
@@ -2249,23 +2316,11 @@
         animateParticles();
 
         // Download counter animation
-        let downloadCount = 48723;
-        const downloadElements = [document.getElementById('downloadCount'), document.getElementById('downloadCount2')];
-
-        function updateDownloadCount() {
-            downloadCount += Math.floor(Math.random() * 3);
-            downloadElements.forEach(el => {
-                if (el) el.textContent = downloadCount.toLocaleString();
-            });
-        }
-
-        // Initial update
-        updateDownloadCount();
-
-        // Update every 5-10 seconds
-        setInterval(() => {
-            updateDownloadCount();
-        }, Math.random() * 5000 + 5000);
+        // (REMOVED: let downloadCount = 48723;)
+        // (REMOVED: const downloadElements = [document.getElementById('downloadCount'), document.getElementById('downloadCount2')];)
+        // (REMOVED: function updateDownloadCount() { ... })
+        // (REMOVED: updateDownloadCount();)
+        // (REMOVED: setInterval(() => { updateDownloadCount(); }, Math.random() * 5000 + 5000);)
 
         // Loader
         window.addEventListener('load', () => {
@@ -2382,6 +2437,7 @@
         });
 
         // Download function
+        // (REMOVED: old downloadBandit() with updateDownloadCount();)
         function downloadBandit() {
             const btn = event.currentTarget;
             const originalContent = btn.innerHTML;
@@ -2390,7 +2446,8 @@
             
             setTimeout(() => {
                 btn.innerHTML = '<span>✓</span> Redirecting to Shop...';
-                updateDownloadCount(); // Increment counter on download
+                // Increment the counter in Firebase
+                counterRef.transaction((current) => (current || 0) + 1);
                 setTimeout(() => {
                     window.location.href = 'shop.html';
                 }, 1000);
@@ -2679,6 +2736,65 @@
             }
         });
 
+        function forceCursorUpdate() {
+          document.body.classList.add('force-cursor-update');
+          setTimeout(function() {
+            document.body.classList.remove('force-cursor-update');
+            // Simulate a mousemove event at the current mouse position
+            var evt = document.createEvent('MouseEvents');
+            evt.initMouseEvent('mousemove', true, true, window, 0,
+              0, 0, 0, 0, false, false, false, false, 0, null);
+            document.dispatchEvent(evt);
+          }, 10);
+        }
+
+        document.addEventListener('visibilitychange', function() {
+          if (!document.hidden) {
+            forceCursorUpdate();
+          }
+        });
+        window.addEventListener('focus', forceCursorUpdate);
+
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBJxOF5E8heM2cMKuDVqSXrm3gNz7aiF1A",
+        authDomain: "banditcounter-f2503.firebaseapp.com",
+        databaseURL: "https://banditcounter-f2503-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "banditcounter-f2503",
+        storageBucket: "banditcounter-f2503.appspot.com",
+        messagingSenderId: "598145756230",
+        appId: "1:598145756230:web:e2939792747942b216ee47"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      const counterRef = db.ref('downloadCount');
+
+      // Listen for real-time updates
+      counterRef.on('value', (snapshot) => {
+        const count = snapshot.val() || 0;
+        document.getElementById('downloadCount').textContent = count.toLocaleString();
+      });
+
+      // Download function
+      function downloadBandit() {
+        const btn = event.currentTarget;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<span>⏳</span> Preparing Download...';
+        btn.style.pointerEvents = 'none';
+        // Increment the counter in Firebase
+        counterRef.transaction((current) => (current || 0) + 1);
+        setTimeout(() => {
+          btn.innerHTML = '<span>✓</span> Redirecting to Shop...';
+          setTimeout(() => {
+            window.location.href = 'shop.html';
+          }, 1000);
+        }, 1500);
+      }
     </script>
 </body>
 </html>
