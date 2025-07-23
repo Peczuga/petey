@@ -2762,21 +2762,47 @@
         document.getElementById('downloadCount').textContent = count.toLocaleString();
       });
 
+      // --- Cooldown logic start ---
+      let downloadCooldownInterval = null;
+      function setDownloadButtonCooldown(btn, remainingMs) {
+        if (downloadCooldownInterval) clearInterval(downloadCooldownInterval);
+        btn.disabled = true;
+        btn.style.pointerEvents = 'none';
+        const start = Date.now();
+        function updateCountdown() {
+          const now = Date.now();
+          const diff = Math.max(0, remainingMs - (now - start));
+          const minutes = Math.floor(diff / 60000);
+          const seconds = Math.floor((diff % 60000) / 1000);
+          btn.innerHTML = `<span>⏳</span> Download available in ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          if (diff <= 0) {
+            clearInterval(downloadCooldownInterval);
+            btn.disabled = false;
+            btn.style.pointerEvents = '';
+            btn.innerHTML = '<span>⬇</span> Download Now';
+          }
+        }
+        updateCountdown();
+        downloadCooldownInterval = setInterval(updateCountdown, 1000);
+      }
+      // --- Cooldown logic end ---
+
       // Download function
       function downloadBandit() {
-        // Check if user has downloaded in the last 15 minutes
+        const btn = event.currentTarget;
         const lastDownload = localStorage.getItem('bandit_last_download');
         const now = Date.now();
         const FIFTEEN_MINUTES = 15 * 60 * 1000;
         if (lastDownload && now - parseInt(lastDownload, 10) < FIFTEEN_MINUTES) {
-          alert('You can only download once every 15 minutes. Please try again later.');
+          const remaining = FIFTEEN_MINUTES - (now - parseInt(lastDownload, 10));
+          setDownloadButtonCooldown(btn, remaining);
           return;
         }
         // Set the new download timestamp
         localStorage.setItem('bandit_last_download', now.toString());
-        const btn = event.currentTarget;
         btn.innerHTML = '<span>⏳</span> Preparing Download...';
         btn.style.pointerEvents = 'none';
+        btn.disabled = true;
         // Increment the counter in Firebase
         counterRef.transaction((current) => (current || 0) + 1);
         setTimeout(() => {
@@ -2792,8 +2818,25 @@
           setTimeout(() => {
             window.location.href = 'shop.html';
           }, 1000);
+          // Start cooldown after download
+          setDownloadButtonCooldown(btn, FIFTEEN_MINUTES);
+          localStorage.setItem('bandit_last_download', Date.now().toString());
         }, 1500);
       }
+
+      // On page load, check if cooldown is active and update button
+      window.addEventListener('DOMContentLoaded', function() {
+        const btn = document.querySelector('.btn.btn-primary[onclick*="downloadBandit"]');
+        if (btn) {
+          const lastDownload = localStorage.getItem('bandit_last_download');
+          const now = Date.now();
+          const FIFTEEN_MINUTES = 15 * 60 * 1000;
+          if (lastDownload && now - parseInt(lastDownload, 10) < FIFTEEN_MINUTES) {
+            const remaining = FIFTEEN_MINUTES - (now - parseInt(lastDownload, 10));
+            setDownloadButtonCooldown(btn, remaining);
+          }
+        }
+      });
     </script>
 </body>
 </html>
