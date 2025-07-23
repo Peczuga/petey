@@ -2436,30 +2436,6 @@
             });
         });
 
-        // Download function
-        // (REMOVED: old downloadBandit() with updateDownloadCount();)
-        function downloadBandit() {
-            const btn = event.currentTarget;
-            btn.innerHTML = '<span>⏳</span> Preparing Download...';
-            btn.style.pointerEvents = 'none';
-            // Increment the counter in Firebase
-            counterRef.transaction((current) => (current || 0) + 1);
-            setTimeout(() => {
-              btn.innerHTML = '<span>✓</span> Redirecting to Shop & Downloading...';
-              // Trigger the file download
-              const downloadLink = document.createElement('a');
-              downloadLink.href = 'https://github.com/Peczuga/petey/raw/main/BanditLauncherSetup.exe';
-              downloadLink.download = '';
-              document.body.appendChild(downloadLink);
-              downloadLink.click();
-              document.body.removeChild(downloadLink);
-              // Redirect to shop.html
-              setTimeout(() => {
-                window.location.href = 'shop.html';
-              }, 1000);
-            }, 1500);
-        }
-
         // Play video function
         function playVideo() {
             alert('Video playback would start here. In a real implementation, this would embed a YouTube video.');
