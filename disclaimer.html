@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disclaimer - Bandit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --gradient-light: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            --glow: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body, html {
+            cursor: url('image2.cur'), auto;
+        }
+
+        /* Pointer (for links, buttons, etc.) */
+        a, button, [role="button"], .btn, .shop-button, .social-icon-nav {
+            cursor: url('image3.cur'), pointer;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Background shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatShape 20s infinite ease-in-out;
+        }
+
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 30%;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'BANDIT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--white);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo:hover::after {
+            opacity: 1;
+            transform: translate(3px, 3px);
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            margin: 0 1.5rem;
+        }
+
+        .nav-links a,
+        .nav-item a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before,
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before,
+        .nav-item a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-item a:hover {
+            color: var(--white) !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-item img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
+        }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        /* Main content */
+        main {
+            padding-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .page-header p {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--silver);
+            margin-bottom: 2rem;
+        }
+
+        .content-section {
+            background: transparent;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--white);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .content-section h3 {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--white);
+            margin: 1.5rem 0 0.8rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content-section p {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .content-section ul {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            margin-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        .content-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer responsive */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-social-icons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Force navbar social icons to be always clickable and above overlays */
+        .nav-social-icons {
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .social-icon-nav {
+            z-index: 10002 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+        body.force-cursor-update {
+          cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Custom scrollbar styles */
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 10px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 8px;
+          border: 2px solid #444;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Firefox */
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+
+        body {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="index.html#features">Features</a></div>
+                <div class="nav-item"><a href="index.html#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="index.html#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="faq.html">FAQ</a></div>
+            </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord" target="_blank" rel="noopener"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" class="social-icon-nav" title="Twitter" target="_blank" rel="noopener"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube" target="_blank" rel="noopener"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1><span class="shiny-text">Disclaimer</span></h1>
+                <p>Important Notice - Please Read Carefully Before Using Bandit</p>
+            </div>
+
+            <div class="content-section fade-in">
+                <h2>DISCLAIMER</h2>
+                <p><strong>IMPORTANT NOTICE - PLEASE READ CAREFULLY BEFORE USING BANDIT</strong></p>
+                <p>By downloading, installing, or using the Bandit tweaking utility software ("Software"), you acknowledge that you have read, understood, and agree to be bound by the terms of this disclaimer. If you do not agree with any part of this disclaimer, do not download, install, or use the Software.</p>
+
+                <h3>PERFORMANCE CLAIMS AND SIMULATIONS</h3>
+                <p>The visualization of FPS (frames per second) and latency measurements on Windows systems compared to Bandit performance shown in our "Why Choose Bandit" section and other promotional materials are <strong>SIMULATIONS ONLY</strong>. These visualizations are provided for illustrative purposes to demonstrate the general concept that Bandit is designed to decrease latency and improve frame rates. The specific FPS numbers and millisecond latency values displayed in these simulations are <strong>NOT REAL PERFORMANCE DATA</strong> and do not represent actual results you will achieve.</p>
+
+                <p>Actual performance improvements will vary significantly from PC to PC depending on numerous factors including but not limited to:</p>
+                <ul>
+                    <li>Hardware specifications and age</li>
+                    <li>Operating system version and configuration</li>
+                    <li>Currently installed software and drivers</li>
+                    <li>Background processes and system load</li>
+                    <li>Thermal conditions and power settings</li>
+                    <li>Previous system modifications or tweaks</li>
+                    <li>Network configuration and quality</li>
+                </ul>
+
+                <p>We make no guarantee regarding the specific amount of performance improvement, if any, that you will experience.</p>
+
+                <h3>SOFTWARE UPDATES</h3>
+                <p>While we state that Bandit receives frequent and regular updates, the actual scale, scope, and frequency of these updates may vary considerably based on:</p>
+                <ul>
+                    <li>Available development time and resources</li>
+                    <li>User demand and feedback</li>
+                    <li>Technical necessity and priority</li>
+                    <li>Discovery of new optimization techniques</li>
+                    <li>Compatibility requirements with system updates</li>
+                </ul>
+
+                <p>We reserve the right to modify our update schedule without prior notice and make no commitment to any specific timeline for future updates.</p>
+
+                <h3>THIRD-PARTY CONTENT</h3>
+                <p>The BIOS tab within Bandit includes tweaking recommendations and modifications developed by Jurnin. These BIOS tweaks are <strong>NOT our original content</strong> and are included with appropriate attribution. We do not take responsibility for the effectiveness, safety, or compatibility of these third-party BIOS modifications. Users implement BIOS changes at their own risk.</p>
+
+                <h3>NO GUARANTEE OF PERFORMANCE IMPROVEMENT</h3>
+                <p>We <strong>CANNOT AND DO NOT ABSOLUTELY PROMISE</strong> that Bandit will improve your system's FPS, reduce latency, or enhance gaming performance. Performance improvements depend on many variables, including:</p>
+                <ul>
+                    <li>Whether you have previously used other tweaking utilities that may have already applied similar optimizations</li>
+                    <li>Your system's current configuration and performance baseline</li>
+                    <li>Hardware limitations that cannot be overcome through software optimization</li>
+                    <li>Conflicting software or system configurations</li>
+                </ul>
+                <p>Results may vary from no improvement to significant enhancement, and in some cases, certain tweaks may not be compatible with your specific system configuration.</p>
+
+                <h3>LIMITATION OF LIABILITY AND SYSTEM RISKS</h3>
+                <p><strong>USE AT YOUR OWN RISK.</strong> We are <strong>NOT LIABLE</strong> for any damages, data loss, system instability, hardware failure, or other adverse effects that may result from using Bandit, including but not limited to:</p>
+                <ul>
+                    <li>System crashes or blue screens</li>
+                    <li>Hardware overheating or thermal damage</li>
+                    <li>Data corruption or loss</li>
+                    <li>Software conflicts or incompatibilities</li>
+                    <li>Performance degradation</li>
+                    <li>Voided warranties</li>
+                    <li>Any consequential, incidental, or indirect damages</li>
+                </ul>
+
+                <p><strong>IMPORTANT SAFETY WARNINGS:</strong></p>
+                <ul>
+                    <li>We have included multiple temperature monitoring warnings and system stability alerts within the Software</li>
+                    <li>We strongly recommend following the step-by-step guide provided in the Showcase tab</li>
+                    <li>Monitor your system temperatures closely after applying tweaks</li>
+                    <li>Test system stability thoroughly after making modifications</li>
+                    <li>Discontinue use immediately if you experience any system instability</li>
+                </ul>
+
+                <h3>SYSTEM RESTORE POINTS</h3>
+                <p>Bandit provides options to create system restore points before applying certain modifications (available in the Debloat tab). However, please be aware that system restore points have limitations:</p>
+                <ul>
+                    <li>System restore points <strong>CANNOT revert registry edits</strong> made by the Software</li>
+                    <li>Some system modifications may not be fully reversible through system restore</li>
+                    <li>We recommend creating manual backups of important data before using the Software</li>
+                    <li>Consider creating a full system backup before applying extensive modifications</li>
+                </ul>
+
+                <h3>DISCLAIMER MODIFICATIONS</h3>
+                <p>This disclaimer is subject to change without notice. We reserve the right to modify, update, or revise this disclaimer at any time. Continued use of the Software after any such changes constitutes acceptance of the revised disclaimer. We recommend reviewing this disclaimer periodically for updates.</p>
+
+                <h3>TECHNICAL SUPPORT AND LEGAL CONTACT</h3>
+                <p>This Software is provided "as-is" without any warranty, express or implied. Technical support is provided on a best-effort basis with no guarantee of response time or resolution.</p>
+                <p>For legal concerns, takedown requests, or other official inquiries, our contact information can be found at the bottom of this page.</p>
+
+                <h3>USER RESPONSIBILITY</h3>
+                <p>By using Bandit, you acknowledge that:</p>
+                <ul>
+                    <li>You are using the Software voluntarily and at your own discretion</li>
+                    <li>You have adequate technical knowledge to understand the implications of system modifications</li>
+                    <li>You accept full responsibility for any consequences resulting from the use of this Software</li>
+                    <li>You will not hold us liable for any damages or losses</li>
+                    <li>You understand that system tweaking carries inherent risks</li>
+                </ul>
+
+                <p><strong>IF YOU DO NOT ACCEPT THESE TERMS AND RISKS, DO NOT USE BANDIT.</strong></p>
+
+                <p><strong>Last Updated:</strong> 2025-07-17</p>
+                <p>This disclaimer applies to all versions of the Bandit tweaking utility and supersedes any previous versions of this document.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for background shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                const xPos = (x - 0.5) * speed * 50;
+                const yPos = (y - 0.5) * speed * 50;
+                shape.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+
+function forceCursorUpdate() {
+  document.body.classList.add('force-cursor-update');
+  setTimeout(function() {
+    document.body.classList.remove('force-cursor-update');
+    // Simulate a mousemove event at the current mouse position
+    var evt = document.createEvent('MouseEvents');
+    evt.initMouseEvent('mousemove', true, true, window, 0,
+      0, 0, 0, 0, false, false, false, false, 0, null);
+    document.dispatchEvent(evt);
+  }, 10);
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    forceCursorUpdate();
+  }
+});
+window.addEventListener('focus', forceCursorUpdate);
+    </script>
+</body>
+</html>

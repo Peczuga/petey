@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Bandit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body.force-cursor-update {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 3px;
+        }
+
+        .nav-left {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1;
+            padding-left: 3rem;
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            margin: 0 1.5rem;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .nav-links a,
+        .nav-left a,
+        .nav-right a,
+        .nav-center-links a,
+        .nav-item a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before,
+        .nav-left a::before,
+        .nav-right a::before,
+        .nav-center-links a::before,
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before,
+        .nav-left a:hover::before,
+        .nav-right a:hover::before,
+        .nav-center-links a:hover::before,
+        .nav-item a:hover::before,
+        .nav-links a.active::before,
+        .nav-left a.active::before,
+        .nav-right a.active::before,
+        .nav-center-links a.active::before,
+        .nav-item a.active::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-left a:hover,
+        .nav-right a:hover,
+        .nav-center-links a:hover,
+        .nav-item a:hover,
+        .nav-links a.active,
+        .nav-left a.active,
+        .nav-right a.active,
+        .nav-center-links a.active,
+        .nav-item a.active {
+            color: var(--white) !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .nav-item img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
+        }
+
+        .nav-divider {
+            position: relative;
+        }
+
+        .nav-divider::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 2px,
+                var(--light-silver) 2px,
+                var(--light-silver) 4px
+            );
+        }
+
+
+        .shop-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-button {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .shop-button img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .shop-button:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        /* Main content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--white);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        /* FAQ Styles */
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .faq-question {
+            padding: 1.8rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.8rem;
+            font-weight: 300;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-item.active {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer p {
+            padding: 0 1.8rem 1.8rem;
+            color: var(--light-silver);
+            line-height: 1.8;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Responsive */
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer responsive */
+        .nav-links {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .nav-left, .nav-right {
+                display: none;
+            }
+
+            .nav-center {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .nav-links {
+                display: flex;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 26, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(20px);
+                list-style: none;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+
+            .nav-divider::before {
+                display: none;
+            }
+
+            .nav-social-icons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+        .faq-list {
+            max-width: 800px;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .faq-item {
+            border: none;
+            margin-bottom: 0;
+            background: #2a2a2a;
+            border-radius: 18px;
+            box-shadow: 0 2px 16px 0 rgba(192,192,192,0.15);
+            overflow: hidden;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        .faq-item.active {
+            box-shadow: 0 4px 24px 0 rgba(160,160,160,0.22);
+            background: #4a4a4a;
+        }
+        .faq-question {
+            cursor: pointer;
+            padding: 1.3rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: transparent;
+            color: #e0e0e0;
+            transition: background 0.2s, color 0.2s;
+            position: relative;
+        }
+        .faq-question::after {
+            content: '+';
+            position: absolute;
+            right: 1.5rem;
+            font-size: 1.5rem;
+            color: #c0c0c0;
+            transition: transform 0.3s, color 0.2s;
+        }
+        .faq-item.active .faq-question {
+            background: transparent;
+            color: #fff;
+        }
+        .faq-item.active .faq-question::after {
+            content: '-';
+            transform: rotate(180deg);
+            color: #fff;
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            background: transparent;
+            color: #e0e0e0;
+            padding: 0 1.5rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            transition: max-height 0.3s ease, padding 0.3s, background 0.3s, color 0.3s;
+        }
+        .faq-item.active .faq-answer {
+            max-height: 500px;
+            padding: 0 1.5rem 1.2rem 1.5rem;
+            background: transparent;
+            color: #fff;
+        }
+        /* Force navbar social icons to be always clickable and above overlays */
+        .nav-social-icons {
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .social-icon-nav {
+            z-index: 10002 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .faq-question, .faq-question:active, .faq-question:focus, .faq-question:hover {
+            cursor: url('image3.cur'), pointer !important;
+        }
+
+        /* Custom scrollbar styles */
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 10px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 8px;
+          border: 2px solid #444;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Firefox */
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+
+        body {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="index.html#features">Features</a></div>
+                <div class="nav-item"><a href="index.html#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="index.html#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="faq.html" class="active">FAQ</a></div>
+            </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord" target="_blank" rel="noopener"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" class="social-icon-nav" title="Twitter" target="_blank" rel="noopener"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube" target="_blank" rel="noopener"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1 class="section-title"><span class="shiny-text">Frequently Asked Questions</span></h1>
+        
+        <div class="faq-container">
+            <div class="faq-list">
+            <div class="faq-item">
+                    <div class="faq-question">What is Bandit?</div>
+                    <div class="faq-answer">Bandit is a tweaking utility that optimizes hidden system settings, reduces latency, and enhances your system's performance. It includes features for debloating, privacy optimization, power management, system cleanup, appearance customization, and more.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What operating systems does Bandit support?</div>
+                    <div class="faq-answer">Bandit supports Windows 10 and Windows 11.</div>
+            </div>
+            <div class="faq-item">
+                    <div class="faq-question">Is Bandit free or paid?</div>
+                    <div class="faq-answer">Bandit is a paid utility. You need to purchase a license through our shop to use the software.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What payment methods do you accept?</div>
+                    <div class="faq-answer">Currently, we only accept PayPal payments.</div>
+            </div>
+            <div class="faq-item">
+                    <div class="faq-question">Do you offer refunds?</div>
+                    <div class="faq-answer">Yes, we offer full refunds until you activate your license. Once activated, refunds are no longer available.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Do I need administrator privileges to run Bandit?</div>
+                    <div class="faq-answer">Yes, administrator rights are required to run Bandit as it needs to make system-level changes.</div>
+            </div>
+            <div class="faq-item">
+                    <div class="faq-question">Is Bandit safe to use?</div>
+                    <div class="faq-answer">Bandit gives you the option to create a system restore point before making changes. However, please note that most registry settings cannot be reverted through system restore points, so use caution when applying tweaks.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What performance improvements can I expect?</div>
+                    <div class="faq-answer">Users typically experience reduced latency, higher and more stable FPS in games, and improved overall system responsiveness.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">What types of tweaks does Bandit perform?</div>
+                <div class="faq-answer">
+                        Bandit includes several categories of tweaks:<br>
+                        <ul>
+                            <li>Debloat: Removes unnecessary system components</li>
+                            <li>Privacy: Optimizes privacy settings</li>
+                            <li>Power: Enhances power management</li>
+                            <li>Cleanup: System cleaning and optimization</li>
+                            <li>Appearance: Visual customizations</li>
+                            <li>And more optimization features</li>
+                        </ul>
+                </div>
+            </div>
+                <div class="faq-item">
+                    <div class="faq-question">Which settings can be reverted?</div>
+                    <div class="faq-answer">While Bandit offers the option to create a system restore point, most registry settings cannot be reverted using this method. Exercise caution when applying tweaks.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">My antivirus is detecting Bandit as a virus. Is it safe?</div>
+                    <div class="faq-answer">This is a false positive. Antivirus software often flags programs that make system changes as potentially harmful, even when they're legitimate optimization tools. Bandit is safe to use.</div>
+                </div>
+            <div class="faq-item">
+                <div class="faq-question">How often is Bandit updated?</div>
+                    <div class="faq-answer">Bandit is updated whenever new tweaks are developed and implemented. This ensures you always have access to the latest optimizations.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Where can I get support?</div>
+                <div class="faq-answer">
+                        You can contact us through multiple channels:<br>
+                        <ul>
+                            <li>Twitter</li>
+                            <li>Discord</li>
+                            <li>YouTube</li>
+                            <li>Gmail</li>
+                        </ul>
+                        Check the socials links at the bottom of this page for direct contact information.
+                </div>
+            </div>
+            <div class="faq-item">
+                    <div class="faq-question">Installation and Setup</div>
+                    <div class="faq-answer">Administrator privileges are required for installation and operation. Follow the standard installation process after purchasing your license from our shop.</div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">Additional Support</div>
+                    <div class="faq-answer">For additional support or questions not covered in this FAQ, please reach out to us through any of our social media channels or email.</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Create mobile menu from left and right nav items
+        function createMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            if (!navLinks) {
+                const mobileNav = document.createElement('ul');
+                mobileNav.id = 'navLinks';
+                mobileNav.className = 'nav-links';
+                
+                // Add all navigation items to mobile menu
+                const leftItems = document.querySelectorAll('.nav-left a');
+                const rightItems = document.querySelectorAll('.nav-right a');
+                
+                [...leftItems, ...rightItems].forEach(link => {
+                    const li = document.createElement('li');
+                    li.innerHTML = link.outerHTML;
+                    mobileNav.appendChild(li);
+                });
+                
+                document.querySelector('.nav-container').appendChild(mobileNav);
+            }
+        }
+
+        // Initialize mobile menu on page load
+        createMobileMenu();
+
+        // Close mobile menu when link clicked
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-links a')) {
+                const menuToggle = document.getElementById('menuToggle');
+                const navLinks = document.getElementById('navLinks');
+                if (menuToggle && navLinks) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
+
+        // Accordion FAQ logic
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', function() {
+                const faqItem = this.parentElement;
+                // Close all other items
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem) item.classList.remove('active');
+                });
+                // Toggle this one
+                faqItem.classList.toggle('active');
+            });
+        });
+
+function forceCursorUpdate() {
+  document.body.classList.add('force-cursor-update');
+  setTimeout(function() {
+    document.body.classList.remove('force-cursor-update');
+    // Simulate a mousemove event at the current mouse position
+    var evt = document.createEvent('MouseEvents');
+    evt.initMouseEvent('mousemove', true, true, window, 0,
+      0, 0, 0, 0, false, false, false, false, 0, null);
+    document.dispatchEvent(evt);
+  }, 10);
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    forceCursorUpdate();
+  }
+});
+window.addEventListener('focus', forceCursorUpdate);
+    </script>
+</body>
+</html>

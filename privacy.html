@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Bandit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --gradient-light: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            --glow: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body, html {
+            cursor: url('Black_normal.cur'), auto;
+        }
+
+        /* Pointer (for links, buttons, etc.) */
+        a, button, [role="button"], .btn, .shop-button, .social-icon-nav {
+            cursor: url('Black_link.cur'), pointer;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Background shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatShape 20s infinite ease-in-out;
+        }
+
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 30%;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'BANDIT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--white);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo:hover::after {
+            opacity: 1;
+            transform: translate(3px, 3px);
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            margin: 0 1.5rem;
+        }
+
+        .nav-links a,
+        .nav-item a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before,
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before,
+        .nav-item a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-item a:hover {
+            color: var(--white) !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-item img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
+        }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        /* Main content */
+        main {
+            padding-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .page-header p {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--silver);
+            margin-bottom: 2rem;
+        }
+
+        .content-section {
+            background: transparent;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--white);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .content-section h3 {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--white);
+            margin: 1.5rem 0 0.8rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content-section h4 {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--white);
+            margin: 1rem 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-section p {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .content-section ul {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            margin-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        .content-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer responsive */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-social-icons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Force navbar social icons to be always clickable and above overlays */
+        .nav-social-icons {
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .social-icon-nav {
+            z-index: 10002 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+        body.force-cursor-update {
+          cursor: url('image2.cur'), auto !important;
+        }
+
+/* Custom scrollbar styles */
+/* Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 10px;
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 8px;
+  border: 2px solid #444;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #222 #0000;
+}
+
+body {
+  scrollbar-width: thin;
+  scrollbar-color: #222 #0000;
+}
+    </style>
+</head>
+<body>
+    <!-- Background shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="index.html#features">Features</a></div>
+                <div class="nav-item"><a href="index.html#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="index.html#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="faq.html">FAQ</a></div>
+            </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord" target="_blank" rel="noopener"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" class="social-icon-nav" title="Twitter" target="_blank" rel="noopener"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube" target="_blank" rel="noopener"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1><span class="shiny-text">Privacy Policy</span></h1>
+                <p>How We Protect and Handle Your Information</p>
+            </div>
+
+            <div class="content-section fade-in">
+                <h2>PRIVACY POLICY</h2>
+                <h3>BANDIT TWEAKING UTILITY SOFTWARE</h3>
+                <p><strong>Effective Date:</strong> 2025-07-18</p>
+                
+                <p>This Privacy Policy describes how we collect, use, store, and protect your personal information when you use our Bandit tweaking utility software ("Software"), visit our website ("Website"), or purchase our services. By using our Software or Website, you consent to the practices described in this Privacy Policy.</p>
+
+                <h3>1. INFORMATION WE COLLECT</h3>
+                <h4>1.1 Personal Information</h4>
+                <p>We collect the following types of personal information:</p>
+                
+                <p><strong>Email Addresses:</strong></p>
+                <ul>
+                    <li>Collected when you purchase a license</li>
+                    <li>Collected when you create an account</li>
+                    <li>Collected when you contact us for support</li>
+                    <li>Used for license delivery and account management</li>
+                </ul>
+                
+                <p><strong>Hardware Identification (HWID):</strong></p>
+                <ul>
+                    <li>Automatically collected when the Software is installed and activated</li>
+                    <li>Used for license validation and anti-piracy measures</li>
+                    <li>Consists of unique hardware identifiers from your computer system</li>
+                    <li>Does not include personal files or sensitive system information</li>
+                </ul>
+                
+                <h4>1.2 Automatically Collected Information</h4>
+                <p>When you use our Software, we may automatically collect:</p>
+                <ul>
+                    <li>Software version information</li>
+                    <li>License activation status</li>
+                </ul>
+
+                <h3>2. HOW WE USE YOUR INFORMATION</h3>
+                <h4>2.1 Primary Uses</h4>
+                <p>We use your personal information for the following purposes:</p>
+                
+                <p><strong>Email Addresses:</strong></p>
+                <ul>
+                    <li>Delivering purchased licenses to your email</li>
+                    <li>Sending license activation instructions</li>
+                    <li>Providing customer support and technical assistance</li>
+                    <li>Sending important updates about the Software</li>
+                    <li>Communicating about your account or purchases</li>
+                </ul>
+                
+                <p><strong>Hardware Identification (HWID):</strong></p>
+                <ul>
+                    <li>Validating legitimate software licenses</li>
+                    <li>Preventing unauthorized use and piracy</li>
+                    <li>Ensuring compliance with license terms</li>
+                    <li>Managing device limits for multi-device licenses</li>
+                </ul>
+                
+                <h4>2.2 Legal Basis for Processing</h4>
+                <p>We process your personal information based on:</p>
+                <ul>
+                    <li>Contract performance (fulfilling license purchases)</li>
+                    <li>Legitimate interests (software security and anti-piracy)</li>
+                    <li>Consent (where explicitly provided)</li>
+                    <li>Legal compliance (where required by law)</li>
+                </ul>
+
+                <h3>3. DATA STORAGE AND SECURITY</h3>
+                <h4>3.1 Storage Location and Duration</h4>
+                <ul>
+                    <li><strong>Email addresses:</strong> Stored securely in our customer database for the duration of your account relationship</li>
+                    <li><strong>HWID data:</strong> Stored for license validation purposes and retained for the duration of your license validity</li>
+                </ul>
+                
+                <h4>3.2 Security Measures</h4>
+                <p>We implement appropriate technical and organizational measures to protect your personal information, including:</p>
+                <ul>
+                    <li>Encryption of sensitive data in transit and at rest</li>
+                    <li>Access controls limiting data access to authorized personnel only</li>
+                    <li>Regular security assessments and updates</li>
+                    <li>Secure servers and database systems</li>
+                    <li>Industry-standard security protocols</li>
+                </ul>
+
+                <h3>4. DATA SHARING AND DISCLOSURE</h3>
+                <h4>4.1 Third-Party Sharing</h4>
+                <p>We do not sell, rent, or trade your personal information to third parties for marketing purposes.</p>
+                
+                <h4>4.2 Limited Disclosure</h4>
+                <p>We may share your information only in the following circumstances:</p>
+                <ul>
+                    <li><strong>Legal Requirements:</strong> When required by law, court order, or legal process</li>
+                    <li><strong>Protection of Rights:</strong> To protect our legal rights, prevent fraud, or ensure software security</li>
+                    <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of business assets (with advance notice to users)</li>
+                </ul>
+
+                <h4>4.3 No Marketing Lists</h4>
+                <p>We do not add your email to marketing lists or share it with advertisers without your explicit consent.</p>
+
+                <h3>5. YOUR RIGHTS AND CHOICES</h3>
+                <h4>5.1 Access and Control</h4>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Access the personal information we hold about you</li>
+                    <li>Request correction of inaccurate or incomplete information</li>
+                    <li>Request deletion of your personal information (subject to legal and contractual obligations)</li>
+                    <li>Object to certain processing activities</li>
+                    <li>Request data portability where technically feasible</li>
+                </ul>
+
+                <h4>5.2 Account Management</h4>
+                <p>You can:</p>
+                <ul>
+                    <li>Contact us to modify or delete your account information</li>
+                </ul>
+
+                <h3>6. COOKIES AND TRACKING TECHNOLOGIES</h3>
+                <h4>6.1 Website Cookies</h4>
+                <p>Our Website may use cookies and similar technologies to:</p>
+                <ul>
+                    <li>Remember your preferences and settings</li>
+                    <li>Analyze website traffic and user behavior</li>
+                    <li>Improve user experience and website functionality</li>
+                    <li>Provide basic analytics about site usage</li>
+                </ul>
+
+                <h4>6.2 Cookie Management</h4>
+                <p>You can control cookie settings through your browser preferences, though some website functionality may be limited if cookies are disabled.</p>
+
+                <h3>7. CHILDREN'S PRIVACY</h3>
+                <p>Our Software and services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected such information, we will take steps to delete it promptly.</p>
+
+                <h3>8. INTERNATIONAL DATA TRANSFERS</h3>
+                <p>If you are located outside our primary jurisdiction, your information may be transferred to and processed in countries where our servers are located. We ensure appropriate safeguards are in place for such transfers.</p>
+
+                <h3>9. DATA RETENTION</h3>
+                <h4>9.1 Retention Periods</h4>
+                <p>We retain your personal information for as long as necessary to provide our services and comply with legal obligations.</p>
+
+                <h4>9.2 Deletion Procedures</h4>
+                <p>When retention periods expire, we securely delete or anonymize your personal information using industry-standard data destruction methods.</p>
+
+                <h3>10. PRIVACY POLICY UPDATES</h3>
+                <h4>10.1 Policy Changes</h4>
+                <p>We may update this Privacy Policy from time to time to reflect changes in our practices, legal requirements, or software functionality. We will notify you of material changes by:</p>
+                <ul>
+                    <li>Posting the updated policy on our Website</li>
+                    <li>Sending email notifications for significant changes</li>
+                    <li>Updating the "Effective Date" at the top of this policy</li>
+                </ul>
+
+                <h4>10.2 Continued Use</h4>
+                <p>Your continued use of the Software or Website after policy updates constitutes acceptance of the revised Privacy Policy.</p>
+
+                <h3>11. DATA PROTECTION COMPLIANCE</h3>
+                <p>We are committed to complying with applicable data protection laws and regulations, including but not limited to GDPR, CCPA, and other relevant privacy legislation where applicable.</p>
+
+                <h3>12. CONTACT INFORMATION AND REQUESTS</h3>
+                <h4>12.1 Privacy Inquiries</h4>
+                <p>For questions about this Privacy Policy, to exercise your privacy rights, or to report privacy concerns, please contact us using the information provided at the bottom of this page.</p>
+
+                <h4>12.2 Response Time</h4>
+                <p>We will respond to privacy-related requests within 30 days of receipt, or as required by applicable law.</p>
+
+                <h4>12.3 Complaint Resolution</h4>
+                <p>If you believe we have not adequately addressed your privacy concerns, you may have the right to lodge a complaint with your local data protection authority.</p>
+
+                <h3>13. SCOPE OF THIS POLICY</h3>
+                <p>This Privacy Policy applies to all personal information collected through:</p>
+                <ul>
+                    <li>The Bandit tweaking utility software</li>
+                    <li>Our official website</li>
+                    <li>Customer support interactions</li>
+                    <li>License purchase and activation processes</li>
+                </ul>
+
+                <h3>14. ACKNOWLEDGMENT</h3>
+                <p>By using our Software or Website, you acknowledge that you have read and understood this Privacy Policy and consent to the collection, use, and disclosure of your personal information as described herein.</p>
+
+                <p><strong>IMPORTANT:</strong> This Privacy Policy is incorporated into and forms part of our Terms of Service. Please review both documents carefully.</p>
+
+                <p><strong>Last Updated:</strong> 2025-07-18</p>
+                <p>This Privacy Policy applies to all versions of the Bandit tweaking utility and supersedes any previous versions.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for background shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                const xPos = (x - 0.5) * speed * 50;
+                const yPos = (y - 0.5) * speed * 50;
+                shape.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+
+function forceCursorUpdate() {
+  document.body.classList.add('force-cursor-update');
+  setTimeout(function() {
+    document.body.classList.remove('force-cursor-update');
+    // Simulate a mousemove event at the current mouse position
+    var evt = document.createEvent('MouseEvents');
+    evt.initMouseEvent('mousemove', true, true, window, 0,
+      0, 0, 0, 0, false, false, false, false, 0, null);
+    document.dispatchEvent(evt);
+  }, 10);
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    forceCursorUpdate();
+  }
+});
+window.addEventListener('focus', forceCursorUpdate);
+    </script>
+</body>
+</html>

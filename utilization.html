@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilization - Bandit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+        }
+
+        body, html {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Pointer (for links, buttons, etc.) */
+        a, button, [role="button"], .btn, .shop-button, .social-icon-nav {
+            cursor: url('image3.cur'), pointer !important;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            letter-spacing: 3px;
+        }
+
+        .nav-left {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-end;
+            flex: 1;
+            padding-right: 1rem;
+        }
+
+        .nav-right {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+            justify-content: flex-start;
+            flex: 1;
+            padding-left: 3rem;
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            margin: 0 1.5rem;
+        }
+
+        .nav-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .nav-links a,
+        .nav-left a,
+        .nav-right a,
+        .nav-center-links a,
+        .nav-item a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before,
+        .nav-left a::before,
+        .nav-right a::before,
+        .nav-center-links a::before,
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before,
+        .nav-left a:hover::before,
+        .nav-right a:hover::before,
+        .nav-center-links a:hover::before,
+        .nav-item a:hover::before,
+        .nav-links a.active::before,
+        .nav-left a.active::before,
+        .nav-right a.active::before,
+        .nav-center-links a.active::before,
+        .nav-item a.active::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-left a:hover,
+        .nav-right a:hover,
+        .nav-center-links a:hover,
+        .nav-item a:hover,
+        .nav-links a.active,
+        .nav-left a.active,
+        .nav-right a.active,
+        .nav-center-links a.active,
+        .nav-item a.active {
+            color: var(--white) !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .nav-item img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
+        }
+
+        .nav-divider {
+            position: relative;
+        }
+
+        .nav-divider::before {
+            content: '';
+            position: absolute;
+            left: -1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 1px;
+            height: 20px;
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent,
+                transparent 2px,
+                var(--light-silver) 2px,
+                var(--light-silver) 4px
+            );
+        }
+
+
+        .shop-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .shop-button {
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .shop-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .shop-button img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .shop-button:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        /* Main content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--white);
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        /* Showcase Grid */
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .showcase-item {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .showcase-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .showcase-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .showcase-item:hover::before {
+            left: 100%;
+        }
+
+        .showcase-image {
+            width: 100%;
+            height: 200px;
+            background: var(--medium-gray);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--light-gray);
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .showcase-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .showcase-description {
+            color: var(--light-silver);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .showcase-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .showcase-link {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            color: var(--white);
+            text-decoration: none;
+            border: 2px solid var(--gray);
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .showcase-link:hover {
+            border-color: var(--white);
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 3rem;
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile menu */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        .nav-links {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .nav-left, .nav-right {
+                display: none;
+            }
+
+            .nav-center {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .nav-links {
+                display: flex;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: rgba(26, 26, 26, 0.98);
+                flex-direction: column;
+                padding: 2rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(20px);
+                list-style: none;
+                gap: 1rem;
+            }
+
+            .nav-links.active {
+                transform: translateY(0);
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .nav-divider::before {
+                display: none;
+            }
+
+            .nav-social-icons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .main-content {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            .showcase-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
+
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        /* Force navbar social icons to be always clickable and above overlays */
+        .nav-social-icons {
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .social-icon-nav {
+            z-index: 10002 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+        body.force-cursor-update {
+          cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Custom scrollbar styles */
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 10px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 8px;
+          border: 2px solid #444;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Firefox */
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+
+        body {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="index.html#features">Features</a></div>
+                <div class="nav-item"><a href="index.html#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="index.html#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html" class="active">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="faq.html">FAQ</a></div>
+            </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord" target="_blank" rel="noopener"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" class="social-icon-nav" title="Twitter" target="_blank" rel="noopener"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube" target="_blank" rel="noopener"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="showcase-guide-container" style="max-width: 900px; margin: 3rem auto; padding: 2.5rem 2rem 2rem 2rem; background: #232323; border-radius: 22px; box-shadow: 0 4px 32px 0 rgba(160,160,160,0.10); color: #e0e0e0;">
+            <h1 style="text-align:center; color:#fff; margin-bottom:2.5rem; font-size:2.4rem; letter-spacing:2px; font-weight:800;">Bandit Launcher Setup and Usage Utilization</h1>
+            <hr style="border: none; border-top: 1px solid #444; margin: 2rem 0 2.5rem 0;">
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">Installation</h2>
+                <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Download the Installer</h3>
+                <p style="margin-bottom:1.2rem;">Download <b>banditlaunchersetup.exe</b> from the link provided <a href="index.html#" style="color:#c0c0c0; text-decoration:underline;">HERE</a>.</p>
+                <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Run the Installation</h3>
+                <ol style="margin-left:1.2rem; margin-bottom:0;">
+                    <li>Open <b>banditlaunchersetup.exe</b></li>
+                    <li>Select "Create desktop shortcut" → Click <b>Next</b></li>
+                    <li>Click <b>Install</b></li>
+                    <li>Select "Launch Bandit Launcher" → Click <b>Finish</b></li>
+                </ol>
+            </section>
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">Initial Setup</h2>
+                <ol style="margin-left:1.2rem;">
+                    <li>When the launcher opens, press <b>Download</b></li>
+                    <li>If an <b>Update</b> button appears, click it and press <b>Yes</b> to any popups</li>
+                    <li>Wait for the green text confirming "You have the latest version"</li>
+                    <li>Press <b>Open</b></li>
+                    <li>Enter your license key and press <b>Activate License</b></li>
+                </ol>
+            </section>
+            <hr style="border: none; border-top: 1px solid #444; margin: 2.5rem 0;">
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">System Optimization Guide</h2>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 1: Create System Backup</h3>
+                    <p style="margin-bottom:0.7rem;"><b>IMPORTANT:</b> Start by creating a restore point using the button in the Debloat tab. This allows you to undo changes if needed.</p>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 2: Debloat Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li><b>Microsoft Account Users:</b> Skip this section if you use a Microsoft account to log into Windows</li>
+                        <li><b>Local Account Users:</b> You may safely press all buttons in the debloat tab, EXCEPT FOR THE PROCESS DISABLER & PROCESS REVERTER BUTTONS, LOCATED AT THE BOTTOM OF THE DEBLOAT TAB. Apply the process disabler tweak last out of all the tweaks in the entire utility.</li>
+                        <li>Read any information popups that appear before proceeding</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 3: NVIDIA Tab (NVIDIA GPU Users Only)</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>If you have an NVIDIA graphics card, you may safely press all buttons in this tab</li>
+                        <li>Skip this section if you use AMD or Intel graphics</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 4: Privacy Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Apply any privacy tweaks you prefer based on your personal preferences</li>
+                        <li>Review each option before applying</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 5: Power Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Apply all tweaks without temperature warnings</li>
+                        <li><b>Advanced Users:</b> If you monitor your system temperatures and they remain within safe limits, you may apply tweaks with temperature warnings</li>
+                        <li><b>Warning:</b> Temperature-flagged tweaks may increase system heat output</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 6: Network Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Apply all available network optimization tweaks</li>
+                        <li>These generally improve network performance and latency</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 7: Appearance Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Apply appearance tweaks based on your visual preferences</li>
+                        <li><b>Font Issue Fix:</b> If the "Disable Windows Animations" tweak makes your desktop font look undesirable, press "Revert to Original Font"</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 8: Cleanup Tab</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Press the first three buttons from the top in order</li>
+                        <li>Click <b>Device Cleanup</b></li>
+                        <li>In the application that opens:
+                            <ul>
+                                <li>Click <b>Devices</b></li>
+                                <li>Click <b>Select All</b></li>
+                                <li>Click <b>Remove Selected</b></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Step 9: Programs Tab</h3>
+                    <div style="margin-bottom:0.7rem; color:#b0b0b0;"><b>⚠️ Advanced Users Only</b> - Programs in this section require technical knowledge. Misuse may cause system instability or performance degradation.</div>
+                </div>
+            </section>
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">Fortnite Optimization (Optional)</h2>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Game Configuration</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Go to the Game Configurator tab</li>
+                        <li>Click the Fortnite configuration button</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Backup Management</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li><b>Create Backup:</b> Press "Create New Backup" to save your current Fortnite graphics settings</li>
+                        <li><b>Restore Backup:</b> Press "Select a Backup" then "Restore Selected Backup" to revert to saved settings</li>
+                    </ul>
+                </div>
+                <div style="background:#292929; border-radius:14px; padding:1.5rem 1.5rem 1.2rem 1.5rem; margin-bottom:2rem;">
+                    <h3 style="color:#c0c0c0; font-size:1.15rem; margin-bottom:0.7rem; font-weight:600;">Apply Optimizations</h3>
+                    <ul style="margin-left:1.2rem;">
+                        <li>Choose the recommended optimization options</li>
+                        <li>Press <b>Apply Fortnite Optimizations</b></li>
+                        <li><b>Important:</b> Do NOT check "Make settings file read only" if you want to adjust Fortnite settings while in-game</li>
+                    </ul>
+                </div>
+            </section>
+            <hr style="border: none; border-top: 1px solid #444; margin: 2.5rem 0;">
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">Important Notes</h2>
+                <ul style="margin-left:1.2rem;">
+                    <li>Always create a restore point before making system changes</li>
+                    <li>Review each tweak before applying to understand its impact</li>
+                    <li>Temperature-related tweaks should only be used if you can monitor system temperatures</li>
+                    <li>The Programs tab is designed for advanced users with technical expertise</li>
+                    <li>Keep backups of important settings, especially for games</li>
+                </ul>
+            </section>
+            <section style="margin-bottom:2.5rem;">
+                <h2 style="color:#e0e0e0; font-size:1.5rem; margin-bottom:1.2rem; font-weight:700; letter-spacing:1px;">Troubleshooting</h2>
+                <ul style="margin-left:1.2rem;">
+                    <li>If you experience issues after applying tweaks:
+                        <ul>
+                            <li>Use the restore point created at the beginning</li>
+                            <li>For font issues, use the "Revert to Original Font" option in the Appearance tab</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+            <div style="margin-top:2.5rem; color:#b0b0b0; text-align:center; font-size:1.08rem;">
+                <b>This utility modifies system settings to optimize performance. Use at your own discretion and always maintain backups of important data.</b>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Mobile menu toggle
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Create mobile menu from left and right nav items
+        function createMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            if (!navLinks) {
+                const mobileNav = document.createElement('ul');
+                mobileNav.id = 'navLinks';
+                mobileNav.className = 'nav-links';
+                
+                // Add all navigation items to mobile menu
+                const leftItems = document.querySelectorAll('.nav-left a');
+                const rightItems = document.querySelectorAll('.nav-right a');
+                
+                [...leftItems, ...rightItems].forEach(link => {
+                    const li = document.createElement('li');
+                    li.innerHTML = link.outerHTML;
+                    mobileNav.appendChild(li);
+                });
+                
+                document.querySelector('.nav-container').appendChild(mobileNav);
+            }
+        }
+
+        // Initialize mobile menu on page load
+        createMobileMenu();
+
+        // Close mobile menu when link clicked
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.nav-links a')) {
+                const menuToggle = document.getElementById('menuToggle');
+                const navLinks = document.getElementById('navLinks');
+                if (menuToggle && navLinks) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            }
+        });
+
+function forceCursorUpdate() {
+  document.body.classList.add('force-cursor-update');
+  setTimeout(function() {
+    document.body.classList.remove('force-cursor-update');
+    // Simulate a mousemove event at the current mouse position
+    var evt = document.createEvent('MouseEvents');
+    evt.initMouseEvent('mousemove', true, true, window, 0,
+      0, 0, 0, 0, false, false, false, false, 0, null);
+    document.dispatchEvent(evt);
+  }, 10);
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    forceCursorUpdate();
+  }
+});
+window.addEventListener('focus', forceCursorUpdate);
+    </script>
+</body>
+</html>

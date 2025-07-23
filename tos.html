@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Bandit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0a0a0a;
+            --dark-gray: #1a1a1a;
+            --medium-gray: #2a2a2a;
+            --gray: #4a4a4a;
+            --light-gray: #8a8a8a;
+            --silver: #c0c0c0;
+            --light-silver: #e0e0e0;
+            --white: #ffffff;
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --gradient-light: linear-gradient(135deg, #e0e0e0 0%, #c0c0c0 100%);
+            --glow: #ffffff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--black);
+            color: var(--light-silver);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        body, html {
+            cursor: url('Black_normal.cur'), auto;
+        }
+
+        /* Pointer (for links, buttons, etc.) */
+        a, button, [role="button"], .btn, .shop-button, .social-icon-nav {
+            cursor: url('Black_link.cur'), pointer;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Background shapes */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .shape {
+            position: absolute;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: floatShape 20s infinite ease-in-out;
+        }
+
+        @keyframes floatShape {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-duration: 25s;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 10%;
+            animation-duration: 20s;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 10%;
+            left: 30%;
+            animation-duration: 30s;
+            animation-delay: -10s;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        nav.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .nav-social-icons {
+            display: flex;
+            gap: 1rem;
+            margin-left: 2rem;
+        }
+
+        .social-icon-nav {
+            color: var(--light-silver);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem;
+        }
+
+        .social-icon-nav:hover {
+            color: var(--white);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .social-icon-nav img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .social-icon-nav:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--white);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .logo::after {
+            content: 'BANDIT';
+            position: absolute;
+            top: 0;
+            left: 0;
+            color: transparent;
+            -webkit-text-stroke: 1px var(--white);
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .logo:hover::after {
+            opacity: 1;
+            transform: translate(3px, 3px);
+        }
+
+        .nav-full-width {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            position: absolute;
+            left: 50%;
+            transform: translateX(calc(-50% - 16px));
+            z-index: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            white-space: nowrap;
+            margin: 0 1.5rem;
+        }
+
+        .nav-links a,
+        .nav-item a {
+            color: var(--light-silver) !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::before,
+        .nav-item a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--white), transparent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::before,
+        .nav-item a:hover::before {
+            width: 100%;
+        }
+
+        .nav-links a:hover,
+        .nav-item a:hover {
+            color: var(--white) !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .nav-item img {
+            filter: brightness(0) invert(1) opacity(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .nav-item a:hover img {
+            filter: brightness(0) invert(1) opacity(1);
+        }
+
+        .shop-icon {
+            transform: translateY(3px);
+            filter: brightness(0) invert(1) opacity(0.8) drop-shadow(0 0 8px rgba(192, 192, 192, 0.4));
+        }
+
+        .nav-item a:hover .shop-icon {
+            filter: brightness(0) invert(1) opacity(1) drop-shadow(0 0 12px rgba(192, 192, 192, 0.6));
+        }
+
+        .shiny-text {
+            color: #b5b5b5a4;
+            background: linear-gradient(
+                120deg,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0) 60%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            display: inline-block;
+            animation: shine 5s linear infinite;
+        }
+
+        @keyframes shine {
+            0% { background-position: 100%; }
+            100% { background-position: -100%; }
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+            padding: 5px;
+        }
+
+        .menu-toggle span {
+            width: 25px;
+            height: 2px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        /* Main content */
+        main {
+            padding-top: 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            text-align: center;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .page-header p {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: var(--silver);
+            margin-bottom: 2rem;
+        }
+
+        .content-section {
+            background: transparent;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .content-section h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: var(--white);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .content-section h3 {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            color: var(--white);
+            margin: 1.5rem 0 0.8rem 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .content-section h4 {
+            font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+            color: var(--white);
+            margin: 1rem 0 0.5rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .content-section p {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .content-section ul {
+            color: var(--light-silver);
+            margin-bottom: 1rem;
+            margin-left: 1.5rem;
+            list-style-type: disc;
+        }
+
+        .content-section li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-gray), var(--medium-gray));
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 0 1rem;
+            margin-top: 5rem;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--light-silver);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+            transform: translateX(5px);
+        }
+
+        .footer-links a::before {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 0;
+            height: 1px;
+            background: var(--white);
+            transition: width 0.3s ease;
+        }
+
+        .footer-links a:hover::before {
+            width: 10px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--light-gray);
+            font-size: 0.9rem;
+        }
+
+        /* Footer responsive */
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .footer {
+                padding: 2rem 0 1rem;
+            }
+            
+            .footer-container {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .footer-links a:hover {
+                transform: none;
+            }
+            
+            .footer-links a::before {
+                display: none;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-social-icons {
+                display: none;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Matrix rain effect background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Force navbar social icons to be always clickable and above overlays */
+        .nav-social-icons {
+            z-index: 10001 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+        .social-icon-nav {
+            z-index: 10002 !important;
+            pointer-events: auto !important;
+            position: relative;
+        }
+
+        /* Always use custom normal cursor */
+        html, body, * {
+            cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Use custom pointer cursor for ALL interactive elements and their states, including clickable images */
+        a, a:active, a:focus, a:hover,
+        button, button:active, button:focus, button:hover,
+        [role="button"], [role="button"]:active, [role="button"]:focus, [role="button"]:hover,
+        .btn, .btn:active, .btn:focus, .btn:hover,
+        .shop-button, .shop-button:active, .shop-button:focus, .shop-button:hover,
+        .social-icon-nav, .social-icon-nav:active, .social-icon-nav:focus, .social-icon-nav:hover,
+        .nav-item a, .nav-item a:active, .nav-item a:focus, .nav-item a:hover,
+        .menu-toggle, .menu-toggle:active, .menu-toggle:focus, .menu-toggle:hover,
+        input[type="submit"], input[type="button"], input[type="reset"],
+        input[type="submit"]:hover, input[type="button"]:hover, input[type="reset"]:hover,
+        label, label:active, label:focus, label:hover,
+        select, select:active, select:focus, select:hover,
+        summary, summary:active, summary:focus, summary:hover,
+        area, area:active, area:focus, area:hover,
+        option, option:active, option:focus, option:hover,
+        iframe,
+        [onclick], [onclick]:hover, [tabindex], [tabindex]:hover,
+        input:not([type="hidden"]):not([disabled]), textarea:not([disabled]), select:not([disabled]), button:not([disabled]),
+        /* Clickable images */
+        img[onclick], img[tabindex], a img, button img, label img, .btn img, .shop-button img, .social-icon-nav img, .nav-item a img, .menu-toggle img, .footer-links a img {
+            cursor: url('image3.cur'), pointer !important;
+        }
+        body.force-cursor-update {
+          cursor: url('image2.cur'), auto !important;
+        }
+
+        /* Custom scrollbar styles */
+        /* Chrome, Edge, Safari */
+        ::-webkit-scrollbar {
+          width: 10px;
+          background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+          background: #222;
+          border-radius: 8px;
+          border: 2px solid #444;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+          background: #444;
+        }
+        ::-webkit-scrollbar-track {
+          background: transparent;
+        }
+
+        /* Firefox */
+        html {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+
+        body {
+          scrollbar-width: thin;
+          scrollbar-color: #222 #0000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background shapes -->
+    <div class="bg-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Matrix background -->
+    <canvas class="matrix-bg" id="matrix"></canvas>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo"><span class="shiny-text">BANDIT</span></a>
+            <div class="nav-full-width">
+                <div class="nav-item"><a href="index.html#features">Features</a></div>
+                <div class="nav-item"><a href="index.html#why-us">Why Us</a></div>
+                <div class="nav-item"><a href="index.html#reviews">Reviews</a></div>
+                <div class="nav-item"><a href="shop.html"><img src="shop.png" alt="Shop" width="32" height="32" class="shop-icon"></a></div>
+                <div class="nav-item"><a href="utilization.html">Utilization</a></div>
+                <div class="nav-item"><a href="bios.html">BIOS</a></div>
+                <div class="nav-item"><a href="faq.html">FAQ</a></div>
+            </div>
+            <div class="nav-social-icons">
+                <a href="https://discord.gg/UqMY7tkNue" class="social-icon-nav" title="Discord" target="_blank" rel="noopener"><img src="discord.png" alt="Discord" width="32" height="32"></a>
+                <a href="https://x.com/BanditTweaks" class="social-icon-nav" title="Twitter" target="_blank" rel="noopener"><img src="twitter.png" alt="Twitter" width="32" height="32"></a>
+                <a href="https://www.youtube.com/@BanditTweaks" class="social-icon-nav" title="YouTube" target="_blank" rel="noopener"><img src="youtube.png" alt="YouTube" width="32" height="32"></a>
+            </div>
+            <div class="menu-toggle" id="menuToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1><span class="shiny-text">Terms of Service</span></h1>
+                <p>Legal Terms and Conditions for Using Bandit</p>
+            </div>
+
+            <div class="content-section fade-in">
+                <h2>TERMS OF SERVICE</h2>
+                <h3>BANDIT TWEAKING UTILITY SOFTWARE</h3>
+                <p><strong>Effective Date:</strong> 2025-07-18</p>
+                
+                <p><strong>IMPORTANT: PLEASE READ THESE TERMS OF SERVICE CAREFULLY BEFORE DOWNLOADING, INSTALLING, OR USING THE BANDIT TWEAKING UTILITY SOFTWARE. BY ACCESSING OUR WEBSITE, DOWNLOADING, INSTALLING, OR USING THE SOFTWARE, YOU AGREE TO BE BOUND BY THESE TERMS OF SERVICE. IF YOU DO NOT AGREE TO THESE TERMS, DO NOT DOWNLOAD, INSTALL, OR USE THE SOFTWARE.</strong></p>
+
+                <h3>1. ACCEPTANCE OF TERMS</h3>
+                <p>These Terms of Service ("Terms") constitute a legally binding agreement between you ("User," "You," or "Your") and the developers and distributors of Bandit ("We," "Us," "Our," or "Company") regarding your use of the Bandit tweaking utility software ("Software" or "Application") and our website ("Website"). These Terms govern your access to and use of the Software and all related services.</p>
+
+                <h3>2. LICENSE GRANT AND RESTRICTIONS</h3>
+                <h4>2.1 Limited License</h4>
+                <p>Subject to your compliance with these Terms and upon purchase of a valid license, we grant you a limited, non-exclusive, non-transferable, revocable license to download, install, and use the Software solely for your personal, non-commercial use on devices you own or control.</p>
+                
+                <h4>2.2 License Validation</h4>
+                <p>You must own a valid, active license to use the Software. Use of the Software without a valid license is strictly prohibited and constitutes a material breach of these Terms.</p>
+                
+                <h4>2.3 Licensing Information</h4>
+                <p>Complete details regarding licensing options, pricing, and specific license terms can be found in the Shop section of our Website. By purchasing a license, you agree to the additional terms specified at the time of purchase.</p>
+
+                <h3>3. PROHIBITED USES AND DISTRIBUTION RESTRICTIONS</h3>
+                <h4>3.1 Absolute Prohibition on Distribution</h4>
+                <p>You are STRICTLY PROHIBITED from distributing, sharing, copying, or transferring the Software in any form, including but not limited to:</p>
+                <ul>
+                    <li>Uploading to file-sharing websites or services</li>
+                    <li>Sharing via email, messaging platforms, or cloud storage</li>
+                    <li>Distributing through peer-to-peer networks</li>
+                    <li>Including in software bundles or packages</li>
+                    <li>Making available for download on any platform other than our official Website</li>
+                </ul>
+                
+                <h4>3.2 Referral Requirement</h4>
+                <p>If you wish to recommend the Software to others, you MUST direct them to our official Website for legitimate download and purchase. You may not provide direct access to the Software files under any circumstances.</p>
+                
+                <h4>3.3 Physical Media Restrictions</h4>
+                <p>You are PROHIBITED from copying the Software to any external storage devices, including but not limited to:</p>
+                <ul>
+                    <li>USB drives or flash drives</li>
+                    <li>External hard drives</li>
+                    <li>CD/DVD/Blu-ray discs</li>
+                    <li>Memory cards or SD cards</li>
+                    <li>Network-attached storage devices</li>
+                    <li>Any other removable or portable storage media</li>
+                </ul>
+                
+                <h4>3.4 License Circumvention</h4>
+                <p>You are STRICTLY FORBIDDEN from:</p>
+                <ul>
+                    <li>Attempting to bypass, crack, or circumvent the license validation system</li>
+                    <li>Using keygens, patches, or other tools to generate unauthorized license keys</li>
+                    <li>Modifying the Software to remove or disable licensing mechanisms</li>
+                    <li>Reverse engineering the licensing system</li>
+                    <li>Sharing valid license keys with unauthorized users</li>
+                    <li>Using the Software on more devices than permitted by your license</li>
+                </ul>
+                
+                <h4>3.5 Unauthorized Access</h4>
+                <p>You may not:</p>
+                <ul>
+                    <li>Use the Software without owning a valid license</li>
+                    <li>Allow others to use your license or account credentials</li>
+                    <li>Access the Software through unauthorized means</li>
+                    <li>Attempt to gain access to premium features without proper licensing</li>
+                </ul>
+
+                <h3>4. IMMEDIATE LICENSE TERMINATION</h3>
+                <h4>4.1 Termination Events</h4>
+                <p>Your license will be IMMEDIATELY TERMINATED without notice if you:</p>
+                <ul>
+                    <li>Violate any distribution or sharing restrictions outlined in Section 3</li>
+                    <li>Use the Software without a valid license</li>
+                    <li>Attempt to bypass or circumvent licensing mechanisms</li>
+                    <li>Copy the Software to unauthorized storage devices</li>
+                    <li>Share your license credentials with others</li>
+                    <li>Engage in any other prohibited activities listed in these Terms</li>
+                </ul>
+                
+                <h4>4.2 Consequences of Termination</h4>
+                <p>Upon termination:</p>
+                <ul>
+                    <li>Your right to use the Software ceases immediately</li>
+                    <li>You must uninstall and delete all copies of the Software</li>
+                    <li>No refund will be provided for terminated licenses</li>
+                    <li>You may be subject to legal action for breach of contract</li>
+                    <li>We reserve the right to pursue all available legal remedies</li>
+                </ul>
+                
+                <h4>4.3 No Notice Required</h4>
+                <p>We reserve the right to terminate licenses immediately without prior notice or warning for any violation of these Terms.</p>
+
+                <h3>5. INTELLECTUAL PROPERTY RIGHTS</h3>
+                <h4>5.1 Ownership</h4>
+                <p>The Software, including all source code, object code, documentation, graphics, user interface, and all intellectual property rights therein, is and remains our exclusive property or the property of our licensors.</p>
+                
+                <h4>5.2 Restrictions</h4>
+                <p>You may not:</p>
+                <ul>
+                    <li>Copy, modify, or create derivative works of the Software</li>
+                    <li>Reverse engineer, decompile, or disassemble the Software</li>
+                    <li>Remove or alter any proprietary notices or labels</li>
+                    <li>Use our trademarks, logos, or branding without permission</li>
+                </ul>
+
+                <h3>6. USER OBLIGATIONS</h3>
+                <h4>6.1 Compliance</h4>
+                <p>You agree to:</p>
+                <ul>
+                    <li>Comply with all applicable laws and regulations</li>
+                    <li>Use the Software only as intended and authorized</li>
+                    <li>Maintain the confidentiality of your license credentials</li>
+                    <li>Report any suspected unauthorized use or security breaches</li>
+                    <li>Keep your license information secure and confidential</li>
+                </ul>
+                
+                <h4>6.2 Responsibility for Use</h4>
+                <p>You are solely responsible for:</p>
+                <ul>
+                    <li>All activities that occur under your license</li>
+                    <li>Ensuring your system meets Software requirements</li>
+                    <li>Creating backups before using the Software</li>
+                    <li>Monitoring system stability and temperatures while using the Software</li>
+                </ul>
+
+                <h3>7. PRIVACY AND DATA COLLECTION</h3>
+                <h4>7.1 License Validation</h4>
+                <p>The Software may collect limited information necessary for license validation, including but not limited to hardware identifiers and license verification data.</p>
+                
+                <h4>7.2 Privacy Policy</h4>
+                <p>Our collection and use of personal information is governed by our Privacy Policy, which is incorporated into these Terms by reference.</p>
+
+                <h3>8. DISCLAIMERS AND WARRANTIES</h3>
+                <h4>8.1 "AS-IS" Basis</h4>
+                <p>THE SOFTWARE IS PROVIDED "AS-IS" WITHOUT ANY WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.</p>
+                
+                <h4>8.2 No Performance Guarantee</h4>
+                <p>We make no warranty that the Software will meet your requirements, operate without interruption, or be error-free.</p>
+
+                <h3>9. LIMITATION OF LIABILITY</h3>
+                <h4>9.1 Damage Limitation</h4>
+                <p>IN NO EVENT SHALL WE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR SYSTEM DAMAGE, REGARDLESS OF THE THEORY OF LIABILITY.</p>
+                
+                <h4>9.2 Maximum Liability</h4>
+                <p>Our total liability for any claims related to the Software shall not exceed the amount you paid for your license.</p>
+
+                <h3>10. INDEMNIFICATION</h3>
+                <p>You agree to indemnify, defend, and hold us harmless from any claims, damages, losses, or expenses arising from your use of the Software or violation of these Terms.</p>
+
+                <h3>11. ENFORCEMENT AND MONITORING</h3>
+                <h4>11.1 Monitoring Rights</h4>
+                <p>We reserve the right to monitor compliance with these Terms and may employ technical measures to detect violations.</p>
+                
+                <h4>11.2 Legal Action</h4>
+                <p>We reserve the right to pursue legal action against users who violate these Terms, including seeking damages, injunctive relief, and attorney's fees.</p>
+                
+                <h4>11.3 Cooperation with Authorities</h4>
+                <p>We may cooperate with law enforcement agencies in investigating violations of these Terms or applicable laws.</p>
+
+                <h3>12. UPDATES AND MODIFICATIONS</h3>
+                <h4>12.1 Software Updates</h4>
+                <p>We may provide updates to the Software at our discretion. Installation of updates may be required to maintain your license.</p>
+                
+                <h4>12.2 Terms Modifications</h4>
+                <p>We reserve the right to modify these Terms at any time. Continued use of the Software after modifications constitutes acceptance of the revised Terms.</p>
+
+                <h3>13. SEVERABILITY</h3>
+                <p>If any provision of these Terms is found to be unenforceable, the remaining provisions shall remain in full force and effect.</p>
+
+                <h3>14. ENTIRE AGREEMENT</h3>
+                <p>These Terms, together with our Privacy Policy and any additional terms provided at the time of purchase, constitute the entire agreement between you and us regarding the Software.</p>
+
+                <h3>15. CONTACT INFORMATION</h3>
+                <p>For questions about these Terms, license issues, or legal matters, please contact us using the information provided at the bottom of this page.</p>
+
+                <h3>16. ACKNOWLEDGMENT</h3>
+                <p><strong>BY DOWNLOADING, INSTALLING, OR USING THE SOFTWARE, YOU ACKNOWLEDGE THAT YOU HAVE READ, UNDERSTOOD, AND AGREE TO BE BOUND BY THESE TERMS OF SERVICE.</strong></p>
+                
+                <p><strong>VIOLATION OF THESE TERMS MAY RESULT IN IMMEDIATE LICENSE TERMINATION AND LEGAL ACTION. USE THE SOFTWARE RESPONSIBLY AND IN ACCORDANCE WITH THESE TERMS.</strong></p>
+                
+                <p><strong>Last Updated:</strong> 2025-07-18</p>
+                <p>These Terms of Service apply to all versions of the Bandit tweaking utility and supersede any previous versions.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <div class="footer-links">
+                        <a href="mailto:bandit.tweaks@gmail.com">bandit.tweaks@gmail.com</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Social</h3>
+                    <div class="footer-links">
+                        <a href="https://discord.gg/UqMY7tkNue" class="footer-social">Discord</a>
+                        <a href="https://x.com/BanditTweaks" class="footer-social">Twitter</a>
+                        <a href="https://www.youtube.com/@BanditTweaks" class="footer-social">YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <div class="footer-links">
+                        <a href="faq.html">FAQ</a>
+                        <a href="utilization.html">Utilization</a>
+                        <a href="bios.html">BIOS</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Legal</h3>
+                    <div class="footer-links">
+                        <a href="privacy.html">Privacy Policy</a>
+                        <a href="tos.html">Terms of Service</a>
+                        <a href="disclaimer.html">Disclaimer</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Bandit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Matrix rain effect
+        const matrix = document.getElementById('matrix');
+        const matrixCtx = matrix.getContext('2d');
+
+        function resizeMatrix() {
+            matrix.width = window.innerWidth;
+            matrix.height = window.innerHeight;
+        }
+        resizeMatrix();
+        window.addEventListener('resize', resizeMatrix);
+
+        const matrixChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
+        const fontSize = 14;
+        const columns = matrix.width / fontSize;
+        const drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
+        }
+
+        function drawMatrix() {
+            matrixCtx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            matrixCtx.fillRect(0, 0, matrix.width, matrix.height);
+
+            matrixCtx.fillStyle = '#e0e0e0';
+            matrixCtx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                matrixCtx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > matrix.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+
+        setInterval(drawMatrix, 35);
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Parallax effect for background shapes
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('.shape');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 0.5;
+                const xPos = (x - 0.5) * speed * 50;
+                const yPos = (y - 0.5) * speed * 50;
+                shape.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            });
+        });
+
+function forceCursorUpdate() {
+  document.body.classList.add('force-cursor-update');
+  setTimeout(function() {
+    document.body.classList.remove('force-cursor-update');
+    // Simulate a mousemove event at the current mouse position
+    var evt = document.createEvent('MouseEvents');
+    evt.initMouseEvent('mousemove', true, true, window, 0,
+      0, 0, 0, 0, false, false, false, false, 0, null);
+    document.dispatchEvent(evt);
+  }, 10);
+}
+
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden) {
+    forceCursorUpdate();
+  }
+});
+window.addEventListener('focus', forceCursorUpdate);
+    </script>
+</body>
+</html>
