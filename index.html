@@ -2764,6 +2764,16 @@
 
       // Download function
       function downloadBandit() {
+        // Check if user has downloaded in the last 15 minutes
+        const lastDownload = localStorage.getItem('bandit_last_download');
+        const now = Date.now();
+        const FIFTEEN_MINUTES = 15 * 60 * 1000;
+        if (lastDownload && now - parseInt(lastDownload, 10) < FIFTEEN_MINUTES) {
+          alert('You can only download once every 15 minutes. Please try again later.');
+          return;
+        }
+        // Set the new download timestamp
+        localStorage.setItem('bandit_last_download', now.toString());
         const btn = event.currentTarget;
         btn.innerHTML = '<span>⏳</span> Preparing Download...';
         btn.style.pointerEvents = 'none';
