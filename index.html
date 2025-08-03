@@ -2805,26 +2805,81 @@
         btn.disabled = true;
         // Increment the counter in Firebase
         counterRef.transaction((current) => (current || 0) + 1);
+        
         setTimeout(() => {
           btn.innerHTML = '<span>✓</span> Downloading...';
-          // Trigger the file download
-          const downloadLink = document.createElement('a');
-          downloadLink.href = 'https://github.com/Peczuga/petey/raw/main/BanditLauncherSetup.exe';
-          downloadLink.download = '';
-          document.body.appendChild(downloadLink);
-          downloadLink.click();
-          document.body.removeChild(downloadLink);
-          // Reset button after download
-          setTimeout(() => {
-            btn.innerHTML = '<span>✓</span> Download Complete!';
-            btn.style.pointerEvents = '';
-            btn.disabled = false;
-            // Start cooldown after 10 seconds
-            setTimeout(() => {
-              setDownloadButtonCooldown(btn, FIFTEEN_MINUTES);
-              localStorage.setItem('bandit_last_download', Date.now().toString());
-            }, 10000);
-          }, 1000);
+          
+          // Use Fetch API to actually track the download progress
+          fetch('https://github.com/Peczuga/petey/raw/main/BanditLauncherSetup.exe')
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Download failed');
+              }
+              
+              // Get the file size for progress tracking
+              const contentLength = response.headers.get('content-length');
+              const totalSize = contentLength ? parseInt(contentLength) : 0;
+              let downloaded = 0;
+              
+              // Create a readable stream to track progress
+              const reader = response.body.getReader();
+              const chunks = [];
+              
+              function readChunk() {
+                return reader.read().then(({ done, value }) => {
+                  if (done) {
+                    // Download complete - create and trigger download
+                    const blob = new Blob(chunks);
+                    const url = URL.createObjectURL(blob);
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = url;
+                    downloadLink.download = 'BanditLauncherSetup.exe';
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(url);
+                    
+                    // Show completion message
+                    btn.innerHTML = '<span>✓</span> Download Complete!';
+                    btn.style.pointerEvents = '';
+                    btn.disabled = false;
+                    
+                    // Start cooldown after 10 seconds
+                    setTimeout(() => {
+                      setDownloadButtonCooldown(btn, FIFTEEN_MINUTES);
+                      localStorage.setItem('bandit_last_download', Date.now().toString());
+                    }, 10000);
+                    
+                    return;
+                  }
+                  
+                  // Track progress
+                  chunks.push(value);
+                  downloaded += value.length;
+                  
+                  if (totalSize > 0) {
+                    const progress = Math.round((downloaded / totalSize) * 100);
+                    btn.innerHTML = `<span>✓</span> Downloading... ${progress}%`;
+                  }
+                  
+                  // Continue reading
+                  return readChunk();
+                });
+              }
+              
+              return readChunk();
+            })
+            .catch(error => {
+              console.error('Download error:', error);
+              btn.innerHTML = '<span>✗</span> Download Failed';
+              btn.style.pointerEvents = '';
+              btn.disabled = false;
+              
+              // Reset button after 5 seconds
+              setTimeout(() => {
+                btn.innerHTML = '<span>⬇</span> Download Now';
+              }, 5000);
+            });
         }, 1500);
       }
 
