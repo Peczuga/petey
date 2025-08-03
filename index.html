@@ -2806,7 +2806,7 @@
         // Increment the counter in Firebase
         counterRef.transaction((current) => (current || 0) + 1);
         setTimeout(() => {
-          btn.innerHTML = '<span>✓</span> Redirecting to Shop & Downloading...';
+          btn.innerHTML = '<span>✓</span> Downloading...';
           // Trigger the file download
           const downloadLink = document.createElement('a');
           downloadLink.href = 'https://github.com/Peczuga/petey/raw/main/BanditLauncherSetup.exe';
@@ -2814,27 +2814,28 @@
           document.body.appendChild(downloadLink);
           downloadLink.click();
           document.body.removeChild(downloadLink);
-          // Redirect to shop.html
+          // Reset button after download
           setTimeout(() => {
-            window.location.href = 'shop.html';
+            btn.innerHTML = '<span>✓</span> Download Complete!';
+            btn.style.pointerEvents = '';
+            btn.disabled = false;
+            // Start cooldown after 10 seconds
+            setTimeout(() => {
+              setDownloadButtonCooldown(btn, FIFTEEN_MINUTES);
+              localStorage.setItem('bandit_last_download', Date.now().toString());
+            }, 10000);
           }, 1000);
-          // Start cooldown after download
-          setDownloadButtonCooldown(btn, FIFTEEN_MINUTES);
-          localStorage.setItem('bandit_last_download', Date.now().toString());
         }, 1500);
       }
 
-      // On page load, check if cooldown is active and update button
+      // On page load, don't show countdown - only show when user tries to download
       window.addEventListener('DOMContentLoaded', function() {
         const btn = document.querySelector('.btn.btn-primary[onclick*="downloadBandit"]');
         if (btn) {
-          const lastDownload = localStorage.getItem('bandit_last_download');
-          const now = Date.now();
-          const FIFTEEN_MINUTES = 15 * 60 * 1000;
-          if (lastDownload && now - parseInt(lastDownload, 10) < FIFTEEN_MINUTES) {
-            const remaining = FIFTEEN_MINUTES - (now - parseInt(lastDownload, 10));
-            setDownloadButtonCooldown(btn, remaining);
-          }
+          // Reset button to normal state on page load
+          btn.innerHTML = '<span>⬇</span> Download Now';
+          btn.style.pointerEvents = '';
+          btn.disabled = false;
         }
       });
     </script>
