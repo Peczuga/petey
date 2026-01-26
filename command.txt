@@ -1,1 +1,1 @@
-/rtp asia
+/home 1
