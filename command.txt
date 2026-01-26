@@ -1,1 +1,1 @@
-/ah sell 10k
+/tpa kvtz
