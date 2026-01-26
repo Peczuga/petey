@@ -1,1 +1,1 @@
-/kill
+/pay 3vir 40m
