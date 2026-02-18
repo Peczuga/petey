@@ -1,1 +1,1 @@
-/ah sell 3m
+/sethome 1
