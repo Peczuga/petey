@@ -1,1 +1,1 @@
-/kill
+/ah sell 2m
