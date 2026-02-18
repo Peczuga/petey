@@ -1,1 +1,1 @@
-/ah sell 2m
+/ah sell 3m
