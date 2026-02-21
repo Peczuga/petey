@@ -1,1 +1,1 @@
-/ah sell 300m
+/kill
