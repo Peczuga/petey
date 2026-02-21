@@ -1,1 +1,1 @@
-/kill
+/pay noelik 100k
