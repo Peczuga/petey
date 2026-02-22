@@ -1,1 +1,1 @@
-/pay noelik 100k
+/pay noelik 30m
