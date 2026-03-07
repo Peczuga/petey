@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DonutSMP — Live Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  /* ── reset & base ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #080808;
+    --bg2:      #0f0f0f;
+    --bg3:      #161616;
+    --border:   #2a2a2a;
+    --border2:  #3a3a3a;
+    --text:     #e8e8e8;
+    --muted:    #555;
+    --accent:   #ffffff;
+    --dim:      #888;
+    --pulse:    #fff;
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    overflow-x: hidden;
+  }
+
+  /* scanline overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0,0,0,0.08) 3px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* corner grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.35;
+    z-index: 9998;
+  }
+
+  /* ── layout ───────────────────────────────────────────── */
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* ── header ───────────────────────────────────────────── */
+  .site-header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 6vw, 62px);
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+  }
+
+  .logo .sub {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .status-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--muted);
+    flex-shrink: 0;
+    transition: background 0.4s;
+  }
+  .status-dot.running  { background: #fff; animation: blink 1.4s ease-in-out infinite; }
+  .status-dot.paused   { background: #666; }
+  .status-dot.stopped  { background: #333; }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.25; }
+  }
+
+  /* ── profit hero ──────────────────────────────────────── */
+  .profit-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 1px;
+  }
+
+  .profit-cell {
+    background: var(--bg2);
+    padding: 24px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .profit-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #fff 50%, transparent);
+    opacity: 0.06;
+  }
+
+  .profit-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .profit-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(26px, 4vw, 40px);
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    line-height: 1;
+    transition: color 0.3s;
+  }
+
+  .profit-value.flash {
+    color: #aaa;
+  }
+
+  /* ── timer row ────────────────────────────────────────── */
+  .timer-row {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-top: none;
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 28px;
+  }
+
+  .timer-label {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .timer-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    flex: 1;
+  }
+
+  .timer-sep { color: var(--border2); font-size: 10px; }
+
+  /* ── stats grid ───────────────────────────────────────── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .stat-card {
+    background: var(--bg2);
+    padding: 20px 22px;
+  }
+
+  .stat-card-label {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .stat-card-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    line-height: 1;
+    color: var(--accent);
+    letter-spacing: 0.02em;
+    transition: transform 0.15s;
+  }
+
+  .stat-card-num.pop {
+    transform: scale(1.08);
+  }
+
+  /* ── log sections ─────────────────────────────────────── */
+  .log-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .log-section {
+    border: 1px solid var(--border);
+  }
+
+  .log-header {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .log-title {
+    font-size: 10px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .log-count {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+
+  .log-body {
+    background: var(--bg2);
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .log-body::-webkit-scrollbar { width: 4px; }
+  .log-body::-webkit-scrollbar-track { background: transparent; }
+  .log-body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .log-entry {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    animation: fadeSlide 0.3s ease;
+  }
+
+  .log-entry:last-child { border-bottom: none; }
+
+  .log-entry-index {
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-right: 10px;
+    font-size: 11px;
+  }
+
+  .log-entry-time {
+    color: var(--dim);
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .log-entry-count {
+    color: var(--accent);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+
+  .log-empty {
+    padding: 20px 16px;
+    color: var(--muted);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateX(-6px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ── skellies log (full width) ────────────────────────── */
+  .log-section.full { }
+
+  /* ── footer ───────────────────────────────────────────── */
+  .page-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  #last-update { color: var(--muted); }
+
+  /* ── connection error ─────────────────────────────────── */
+  .conn-error {
+    display: none;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    padding: 14px 20px;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+
+  .conn-error.visible { display: block; }
+
+  /* ── responsive ───────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .profit-hero { grid-template-columns: 1fr; }
+    .stats-grid  { grid-template-columns: 1fr 1fr; }
+    .log-grid    { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="logo">
+      DonutSMP
+      <span class="sub">Live Tracker</span>
+    </div>
+    <div class="status-bar">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Connecting…</span>
+    </div>
+  </header>
+
+  <!-- Connection error -->
+  <div class="conn-error" id="connError">
+    ⚠ Cannot reach tracker API — check bot is running
+  </div>
+
+  <!-- Profit Hero -->
+  <div class="profit-hero">
+    <div class="profit-cell">
+      <div class="profit-label">Estimated Total Profit</div>
+      <div class="profit-value" id="totalProfit">—</div>
+    </div>
+    <div class="profit-cell">
+      <div class="profit-label">Profit / Hour</div>
+      <div class="profit-value" id="profitPerHour">—</div>
+    </div>
+  </div>
+
+  <!-- Timer -->
+  <div class="timer-row">
+    <span class="timer-label">Time Active</span>
+    <span class="timer-value" id="timer">00h 00m 00s</span>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-label">Bases Found</div>
+      <div class="stat-card-num" id="totalBases">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Unraided</div>
+      <div class="stat-card-num" id="unraidedCount">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Raided</div>
+      <div class="stat-card-num" id="raidedCount">0</div>
+    </div>
+  </div>
+
+  <!-- Base Logs -->
+  <div class="log-grid">
+    <div class="log-section">
+      <div class="log-header">
+        <span class="log-title">Unraided Bases</span>
+        <span class="log-count" id="unraidedCountHdr">0</span>
+      </div>
+      <div class="log-body" id="unraidedLog"></div>
+    </div>
+    <div class="log-section">
+      <div class="log-header">
+        <span class="log-title">Raided Bases</span>
+        <span class="log-count" id="raidedCountHdr">0</span>
+      </div>
+      <div class="log-body" id="raidedLog"></div>
+    </div>
+  </div>
+
+  <!-- Skellies log -->
+  <div class="log-section full" style="margin-bottom:28px">
+    <div class="log-header">
+      <span class="log-title">Skellies Found</span>
+      <span class="log-count" id="skelliesCountHdr">0</span>
+    </div>
+    <div class="log-body" id="skelliesLog"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="page-footer">
+    <span>bandittweaks.com/donutsmp</span>
+    <span id="last-update">—</span>
+  </footer>
+
+</div>
+
+<script>
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  // Replace with your deployed bot URL (e.g. https://your-app.railway.app)
+  const API_URL = 'https://YOUR_BOT_URL_HERE/api/stats';
+  const POLL_MS = 1000; // update every second
+  // ─────────────────────────────────────────────────────────────────────────
+
+  let serverElapsedMs  = 0;
+  let localStartTime   = null; // performance.now() when we last fetched a running state
+  let status           = 'idle';
+  let lastData         = null;
+
+  // ── formatting helpers ────────────────────────────────────────────────────
+  function fmtMs(ms) {
+    const s = Math.floor(ms / 1000);
+    const h = Math.floor(s / 3600);
+    const m = Math.floor((s % 3600) / 60);
+    const sc = s % 60;
+    return `${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m ${String(sc).padStart(2,'0')}s`;
+  }
+
+  function fmtMoney(n) {
+    if (n >= 1_000_000) return (n / 1_000_000).toFixed(2) + 'M';
+    if (n >= 1_000)     return (n / 1_000).toFixed(1) + 'K';
+    return Math.round(n).toLocaleString();
+  }
+
+  function fmtTime(iso) {
+    const d = new Date(iso);
+    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+
+  // ── render ────────────────────────────────────────────────────────────────
+  function renderTimer() {
+    let ms = serverElapsedMs;
+    if (status === 'running' && localStartTime !== null) {
+      ms += performance.now() - localStartTime;
+    }
+    document.getElementById('timer').textContent = fmtMs(ms);
+  }
+
+  function pop(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('pop');
+    void el.offsetWidth;
+    el.classList.add('pop');
+    setTimeout(() => el.classList.remove('pop'), 200);
+  }
+
+  function renderLog(containerId, items, renderFn) {
+    const el = document.getElementById(containerId);
+    if (!items.length) {
+      el.innerHTML = '<div class="log-empty">None yet</div>';
+      return;
+    }
+    el.innerHTML = items.map(renderFn).join('');
+  }
+
+  function render(data) {
+    const prev = lastData;
+
+    // status dot
+    const dot  = document.getElementById('statusDot');
+    const stxt = document.getElementById('statusText');
+    dot.className = 'status-dot ' + data.status;
+    stxt.textContent = { idle: 'Idle', running: 'Live', paused: 'Paused', stopped: 'Stopped' }[data.status] ?? data.status;
+
+    // profit
+    document.getElementById('totalProfit').textContent  = fmtMoney(data.estimatedProfit);
+    document.getElementById('profitPerHour').textContent = fmtMoney(data.profitPerHour) + '/h';
+
+    // stat cards
+    const total    = data.raidedBases.length + data.unraidedBases.length;
+    const prevTotal = prev ? prev.raidedBases.length + prev.unraidedBases.length : -1;
+
+    document.getElementById('totalBases').textContent   = total;
+    document.getElementById('unraidedCount').textContent = data.unraidedBases.length;
+    document.getElementById('raidedCount').textContent   = data.raidedBases.length;
+
+    if (prev) {
+      if (total > prevTotal) pop('totalBases');
+      if (data.unraidedBases.length > prev.unraidedBases.length) pop('unraidedCount');
+      if (data.raidedBases.length   > prev.raidedBases.length)   pop('raidedCount');
+    }
+
+    // header counts
+    document.getElementById('unraidedCountHdr').textContent  = data.unraidedBases.length;
+    document.getElementById('raidedCountHdr').textContent    = data.raidedBases.length;
+    document.getElementById('skelliesCountHdr').textContent  = data.totalSkellies;
+
+    // logs
+    renderLog('unraidedLog', data.unraidedBases, (ts, i) =>
+      `<div class="log-entry">
+        <span class="log-entry-index">#${i+1}</span>
+        <span style="flex:1"></span>
+        <span class="log-entry-time">${fmtTime(ts)}</span>
+      </div>`
+    );
+
+    renderLog('raidedLog', data.raidedBases, (ts, i) =>
+      `<div class="log-entry">
+        <span class="log-entry-index">#${i+1}</span>
+        <span style="flex:1"></span>
+        <span class="log-entry-time">${fmtTime(ts)}</span>
+      </div>`
+    );
+
+    renderLog('skelliesLog', data.skellies, (entry, i) =>
+      `<div class="log-entry">
+        <span class="log-entry-index">#${i+1}</span>
+        <span class="log-entry-count">×${entry.count}</span>
+        <span style="flex:1"></span>
+        <span class="log-entry-time">${fmtTime(entry.timestamp)}</span>
+      </div>`
+    );
+
+    document.getElementById('last-update').textContent =
+      'Updated ' + new Date().toLocaleTimeString();
+
+    lastData = data;
+  }
+
+  // ── polling ───────────────────────────────────────────────────────────────
+  async function fetchStats() {
+    try {
+      const res  = await fetch(API_URL);
+      const data = await res.json();
+
+      document.getElementById('connError').classList.remove('visible');
+
+      status         = data.status;
+      serverElapsedMs = data.elapsedMs;
+      localStartTime  = data.status === 'running' ? performance.now() : null;
+
+      render(data);
+    } catch (e) {
+      document.getElementById('connError').classList.add('visible');
+      document.getElementById('statusDot').className = 'status-dot';
+      document.getElementById('statusText').textContent = 'Disconnected';
+    }
+  }
+
+  // ── tick ──────────────────────────────────────────────────────────────────
+  setInterval(renderTimer, 250);
+
+  // poll every second
+  fetchStats();
+  setInterval(fetchStats, POLL_MS);
+</script>
+</body>
+</html>
