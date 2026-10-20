@@ -133,6 +133,7 @@ const state = {
   minPatch: 0,
   probe: { x: 0, y: 64, z: 0 },
   view: null,
+  samples: [],
 };
 for (const b of BIOMES) state.sel[b.id] = 1;
 let world = null; // { mc, large, lo, hi } for the workers
@@ -158,6 +159,11 @@ function loadSaved() {
   if (Number.isFinite(s.minPatch)) state.minPatch = s.minPatch;
   if (s.probe && Number.isFinite(s.probe.x)) state.probe = s.probe;
   if (s.view && Number.isFinite(s.view.cx) && Number.isFinite(s.view.bpp)) state.view = s.view;
+  if (Array.isArray(s.samples)) {
+    state.samples = s.samples.filter(x => x && Array.isArray(x.rgb) && x.rgb.length === 3 && x.rgb.every(Number.isFinite) &&
+      (x.role === 'base' || (x.role === 'ref' && BIOME_BY_KEY.has(x.biome))));
+  }
+  if (typeof s.markRole === 'string' && (s.markRole === 'base' || BIOME_BY_KEY.has(s.markRole.slice(4)))) markRole = s.markRole;
   autoModeSwitched = true;
 }
 
@@ -173,6 +179,8 @@ function saveSoon() {
       seed: state.seed, mc: state.mc, large: state.large, heightMode: state.heightMode, y: state.y,
       area: state.area, sel, zones: state.zones, mode: state.mode, res: state.res,
       minPatch: state.minPatch, probe: state.probe, view: { cx: view.cx, cz: view.cz, bpp: view.bpp },
+      samples: state.samples.map(x => ({ role: x.role, rgb: x.rgb, biome: x.biome, px: x.px, uneven: x.uneven })),
+      markRole,
     };
     try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) { /* storage unavailable */ }
   }, 300);
@@ -983,8 +991,9 @@ function renderWaters() {
     const names = g.ids.map(id => BIOME_BY_ID.get(id).label).join(', ');
     return '<button type="button" class="water" id="water-' + i + '" data-i="' + i + '" aria-pressed="false" title="' +
       esc(hex(g.c).toUpperCase() + ' · ' + names) + '" style="--c:' + hex(g.c) + '">' +
-      '<span class="chip"></span><span class="t"><b>' + esc(g.name) + '</b><i>' + esc(g.who) + ' · ' + hex(g.c).toUpperCase() + '</i></span></button>';
+      '<canvas class="chip" width="48" height="24" data-c="' + g.c + '"></canvas><span class="t"><b>' + esc(g.name) + '</b><i>' + esc(g.who) + ' · ' + hex(g.c).toUpperCase() + '</i></span></button>';
   }).join('');
+  drawWaterTiles(box);
   box.addEventListener('click', (e) => {
     const btn = e.target.closest('.water');
     if (!btn) return;
@@ -1448,6 +1457,568 @@ function showProbe(mark) {
     '<div class="hint">minecraft:' + b.key + ' · water ' + hex(b.water).toUpperCase() + ' · ' + status + '</div></div>';
 }
 
+// ───────────────────────── water pictures ─────────────────────────
+
+// Stand-in for the vanilla water texture (which can't be shipped): light grey
+// 16×16 ripples. Water is drawn the way Java renders it from above: the tinted
+// surface, partly see-through, over a seabed that gets darker with depth.
+const WATER_TEX = (() => {
+  const t = new Float32Array(256);
+  for (let y = 0; y < 16; y++) {
+    for (let x = 0; x < 16; x++) {
+      const wave = 0.5 * Math.sin((x + y * 0.5) * Math.PI / 4) + 0.5 * Math.sin((x * 2 - y) * Math.PI / 8);
+      let h = Math.imul(x + 1, 374761393) ^ Math.imul(y + 1, 668265263);
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      const noise = (((h ^ (h >>> 16)) & 255) / 255) - 0.5;
+      t[y * 16 + x] = 0.8 + 0.06 * wave + 0.04 * noise;
+    }
+  }
+  return t;
+})();
+const WATER_ALPHA = 0.72;
+const SEABED_SHALLOW = [219, 207, 163]; // sand
+const SEABED_DEEP = [120, 112, 96];     // gravel / dirt
+
+function rgbOf(c) { return [(c >> 16) & 255, (c >> 8) & 255, c & 255]; }
+function skyLight(level) { const f = level / 15; return f / (4 - 3 * f); }
+
+// One block per 16 texels, depth going from d0 (left block) to d1 (right block).
+function drawWater(canvas, tint, d0, d1) {
+  const W = canvas.width, H = canvas.height;
+  const c2 = canvas.getContext('2d');
+  const img = c2.createImageData(W, H);
+  const t = rgbOf(tint);
+  const blocks = Math.max(1, Math.ceil(W / 16));
+  for (let x = 0; x < W; x++) {
+    const b = Math.floor(x / 16);
+    const depth = Math.round(blocks > 1 ? d0 + (d1 - d0) * b / (blocks - 1) : d0);
+    const lf = skyLight(Math.max(0, 15 - depth));
+    const k = clamp((depth - 2) / 6, 0, 1);
+    for (let y = 0; y < H; y++) {
+      const g = WATER_TEX[(y & 15) * 16 + (x & 15)];
+      const o = (y * W + x) * 4;
+      for (let i = 0; i < 3; i++) {
+        const floor = SEABED_SHALLOW[i] * (1 - k) + SEABED_DEEP[i] * k;
+        img.data[o + i] = clamp(Math.round(WATER_ALPHA * g * t[i] + (1 - WATER_ALPHA) * floor * lf), 0, 255);
+      }
+      img.data[o + 3] = 255;
+    }
+  }
+  c2.putImageData(img, 0, 0);
+}
+
+function drawWaterTiles(root) {
+  for (const cv of root.querySelectorAll('canvas[data-c]')) drawWater(cv, +cv.dataset.c, 1, 10);
+}
+
+// ───────────────────────── match from the stream ─────────────────────────
+
+// Colours are compared as log ratios R/B and G/B. Brightness from depth,
+// shadow or time of day scales all three channels together and cancels out;
+// a stream's colour shift becomes a constant offset, which water from a
+// biome you know measures and removes. With known water of different colours
+// a scale is fitted too (haze, seabed showing through, contrast), pulled
+// towards 1 so that similar references don't overfit it. Tuned on simulated
+// frames with random lighting, depth, colour grading, gamma and black level.
+const MATCH_E = 1;
+const MATCH_RIDGE = 0.03;
+const MATCH_CLEAR = 0.16;
+const MATCH_POSSIBLE = 0.3;
+const MATCH_TIE = 0.08;
+
+function waterFeat(rgb) {
+  return [Math.log((rgb[0] + MATCH_E) / (rgb[2] + MATCH_E)), Math.log((rgb[1] + MATCH_E) / (rgb[2] + MATCH_E))];
+}
+function rgbHex(rgb) { return '#' + rgb.map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase(); }
+function closeness(d) {
+  return d < 0.08 ? 'very close' : d < MATCH_CLEAR ? 'close' : d < MATCH_POSSIBLE ? 'possible' : 'unlikely';
+}
+
+const shots = [];
+let shotSeq = 0;
+let markRole = 'base';
+
+function sampleLabel(s) {
+  if (s.role === 'base') return 'Base water';
+  const b = BIOME_BY_KEY.get(s.biome);
+  return 'Known: ' + (b ? b.label : 'biome');
+}
+
+function roleOptions() {
+  let html = '<option value="base">Base water</option>';
+  for (const g of WATER_GROUPS) {
+    html += '<optgroup label="Known biome · ' + esc(g.name) + ' water">';
+    for (const id of g.ids) {
+      const b = BIOME_BY_ID.get(id);
+      html += '<option value="ref:' + b.key + '">' + esc(b.label) + '</option>';
+    }
+    html += '</optgroup>';
+  }
+  return html;
+}
+
+function addSample(rgb, role, extra) {
+  const s = Object.assign({ role: role === 'base' ? 'base' : 'ref', rgb }, extra || {});
+  if (s.role === 'ref') {
+    s.biome = role.slice(4);
+    if (!BIOME_BY_KEY.has(s.biome)) return;
+  }
+  state.samples.push(s);
+  samplesChanged();
+}
+
+function samplesChanged() {
+  renderSamples();
+  renderMatch();
+  if (!viewer.el.hidden) drawViewer();
+  saveSoon();
+}
+
+function computeMatch() {
+  const base = state.samples.filter(s => s.role === 'base');
+  const refs = state.samples.filter(s => s.role === 'ref');
+  if (!base.length) return null;
+  // observed = scale * true + offset, per axis offset, shared scale
+  const n = refs.length;
+  const ft = refs.map(r => waterFeat(rgbOf(BIOME_BY_KEY.get(r.biome).water)));
+  const fo = refs.map(r => waterFeat(r.rgb));
+  const mt = [0, 0], mo = [0, 0];
+  for (let k = 0; k < n; k++) for (let a = 0; a < 2; a++) { mt[a] += ft[k][a] / n; mo[a] += fo[k][a] / n; }
+  let num = MATCH_RIDGE * n, den = MATCH_RIDGE * n;
+  for (let k = 0; k < n; k++) {
+    for (let a = 0; a < 2; a++) {
+      num += (ft[k][a] - mt[a]) * (fo[k][a] - mo[a]);
+      den += (ft[k][a] - mt[a]) ** 2;
+    }
+  }
+  const scale = n ? clamp(num / den, 0.5, 1.5) : 1;
+  const off = n ? [mo[0] - scale * mt[0], mo[1] - scale * mt[1]] : [0, 0];
+  let spread = null;
+  if (n >= 2) {
+    let ss = 0;
+    for (let k = 0; k < n; k++) for (let a = 0; a < 2; a++) ss += (fo[k][a] - scale * ft[k][a] - off[a]) ** 2;
+    spread = Math.sqrt(ss / n);
+  }
+  const mixed = new Set(refs.map(r => BIOME_BY_KEY.get(r.biome).water)).size > 1;
+  const est = [0, 0];
+  for (const s of base) {
+    const f = waterFeat(s.rgb);
+    est[0] += (f[0] - off[0]) / scale / base.length;
+    est[1] += (f[1] - off[1]) / scale / base.length;
+  }
+  const ranked = WATER_GROUPS.map((g, i) => {
+    const f = waterFeat(rgbOf(g.c));
+    return { i, g, d: Math.hypot(est[0] - f[0], est[1] - f[1]) };
+  }).sort((a, b) => a.d - b.d);
+  // the tint those ratios imply, as bright as the closest real water colour
+  const best = ranked[0];
+  const luma = (c) => 0.3 * c[0] + 0.59 * c[1] + 0.11 * c[2];
+  let est3 = [Math.exp(est[0]), Math.exp(est[1]), 1];
+  const k = luma(rgbOf(best.g.c)) / luma(est3);
+  est3 = est3.map(v => v * k);
+  const mx = Math.max(...est3);
+  if (mx > 255) est3 = est3.map(v => v * 255 / mx);
+  est3 = est3.map(v => clamp(Math.round(v), 0, 255));
+  const contenders = ranked.filter(r => r.d < MATCH_POSSIBLE && r.d <= best.d + MATCH_TIE);
+  return { ranked, est3, refs: n, mixed, spread, base: base.length, contenders };
+}
+
+function renderSamples() {
+  const box = $('#samples');
+  const nb = state.samples.filter(s => s.role === 'base').length;
+  const nr = state.samples.length - nb;
+  $('#match-count').textContent = state.samples.length ? nb + ' base · ' + nr + ' known' : '';
+  $('#samples-clear').hidden = !state.samples.length;
+  if (!state.samples.length) {
+    box.innerHTML = '<div class="empty">No water marked yet.</div>';
+    return;
+  }
+  box.innerHTML = state.samples.map((s, k) => {
+    const pic = s.crop ? '<img class="crop" src="' + s.crop + '" alt="">' : '<span class="crop" style="background:' + rgbHex(s.rgb) + '"></span>';
+    const meta = [rgbHex(s.rgb)];
+    if (s.px) meta.push(fmtInt(s.px) + ' px');
+    if (s.uneven) meta.push('uneven area, try plain open water');
+    return '<div class="sample">' + pic + '<span class="sw" style="background:' + rgbHex(s.rgb) + '"></span>' +
+      '<div style="min-width:0"><b>' + esc(sampleLabel(s)) + '</b><div class="meta">' + esc(meta.join(' · ')) + '</div></div>' +
+      '<button type="button" class="btn small cut" data-del="' + k + '">Remove</button></div>';
+  }).join('');
+}
+
+function renderMatch() {
+  const m = computeMatch();
+  const verdict = $('#verdict'), list = $('#matches'), apply = $('#match-apply'), calib = $('#calib-note');
+  apply.hidden = true;
+  if (!m) {
+    verdict.textContent = state.samples.length ? 'Now mark the water at the base.' : 'Mark the water at the base to get a match.';
+    verdict.className = 'verdict';
+    calib.textContent = '';
+    list.innerHTML = '';
+    return;
+  }
+  const best = m.ranked[0];
+  const who = ' <span>(' + esc(best.g.who) + ')</span>';
+  if (best.d < MATCH_CLEAR && m.contenders.length === 1) {
+    verdict.innerHTML = (m.refs ? 'Best match: ' : 'Looks most like: ') + '<b>' + esc(best.g.name) + '</b>' + who;
+    verdict.className = m.refs ? 'verdict good' : 'verdict maybe';
+  } else if (m.contenders.length === 1) {
+    verdict.innerHTML = 'Closest: <b>' + esc(best.g.name) + '</b>' + who + ' <span>but not a clean match</span>';
+    verdict.className = 'verdict maybe';
+  } else if (m.contenders.length) {
+    verdict.innerHTML = 'Close call: <b>' + m.contenders.map(r => esc(r.g.name)).join('</b> or <b>') + '</b>';
+    verdict.className = 'verdict maybe';
+  } else {
+    verdict.textContent = 'Nothing matches well. Mark water in a biome you know (same stream) so the colours can be corrected.';
+    verdict.className = 'verdict bad';
+  }
+  if (!m.refs) {
+    calib.textContent = 'Not corrected yet: add water from a biome you know the player was in, from the same stream. Without it, stream colour and lighting can push the result one colour over.';
+  } else {
+    let t = 'Corrected using ' + m.refs + ' known water sample' + (m.refs === 1 ? '' : 's');
+    if (m.spread != null) {
+      const word = m.spread < 0.06 ? 'they agree well' : m.spread < 0.15 ? 'they roughly agree' : "they don't agree, so lighting differs between them; use ones from the same scene as the base";
+      t += ' (' + word + ', ±' + m.spread.toFixed(2) + ')';
+    }
+    t += '.';
+    if (!m.mixed) t += ' Add one with a different water colour (a swamp, an ocean) to also correct for haze, contrast and seabed showing through.';
+    calib.textContent = t;
+  }
+  const baseSample = state.samples.find(s => s.role === 'base');
+  const seen = baseSample.crop ? '<img class="crop" src="' + baseSample.crop + '" alt="">' : '<span class="crop" style="background:' + rgbHex(baseSample.rgb) + '"></span>';
+  let html = '<div class="match head-row"><div class="pair">' + seen + '<span class="crop" style="background:' + rgbHex(m.est3) + '"></span></div>' +
+    '<div><b>Your base water</b><div class="meta">as seen · ' + (m.refs ? 'corrected' : 'implied') + ' tint ' + rgbHex(m.est3) + '</div></div><span></span></div>';
+  html += m.ranked.map((r, k) => {
+    const w = clamp(1 - r.d / 0.6, 0.02, 1);
+    const isC = m.contenders.includes(r);
+    return '<div class="match' + (isC ? ' best' : '') + '">' +
+      '<div class="pair"><canvas class="wtile" width="48" height="32" data-c="' + r.g.c + '"></canvas><span class="crop" style="background:' + hex(r.g.c) + '"></span></div>' +
+      '<div style="min-width:0"><b>' + esc(r.g.name) + '</b><div class="meta">' + esc(r.g.who) + ' · ' + hex(r.g.c).toUpperCase() + '</div>' +
+      '<div class="bar"><i style="width:' + (w * 100).toFixed(0) + '%"></i></div></div>' +
+      '<span class="word">' + closeness(r.d) + '</span></div>';
+  }).join('');
+  list.innerHTML = html;
+  drawWaterTiles(list);
+  if (m.contenders.length) {
+    apply.hidden = false;
+    apply.textContent = 'Tick only ' + m.contenders.map(r => r.g.name.toLowerCase()).join(' + ') + ' biomes';
+    apply.dataset.groups = m.contenders.map(r => r.i).join(',');
+  }
+}
+
+// ── screenshots ──
+
+const viewer = {
+  el: $('#viewer'), stage: $('#viewer-stage'), canvas: $('#viewer-canvas'), ctx: null,
+  shot: null, scale: 1, ox: 0, oy: 0, tool: 'mark', drag: null, rubber: null, pointers: new Map(), w: 1, h: 1, dpr: 1,
+};
+viewer.ctx = viewer.canvas.getContext('2d');
+
+function loadImageFile(file) {
+  if (!file || !/^image\//.test(file.type)) return;
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const sc = Math.min(1, 4096 / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * sc));
+    c.height = Math.max(1, Math.round(img.naturalHeight * sc));
+    const cx = c.getContext('2d', { willReadFrequently: true });
+    cx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    const t = document.createElement('canvas');
+    const ts = 120 / Math.max(c.width, c.height);
+    t.width = Math.max(1, Math.round(c.width * ts));
+    t.height = Math.max(1, Math.round(c.height * ts));
+    t.getContext('2d').drawImage(c, 0, 0, t.width, t.height);
+    const shot = { id: ++shotSeq, name: file.name || 'Pasted screenshot', canvas: c, ctx: cx, thumb: t.toDataURL() };
+    shots.push(shot);
+    renderShots();
+    openShot(shot);
+  };
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    $('#shots-note').textContent = 'That file could not be opened as an image.';
+  };
+  img.src = url;
+}
+
+function renderShots() {
+  $('#shots').innerHTML = shots.map(s =>
+    '<button type="button" class="shot" data-shot="' + s.id + '" title="Open ' + esc(s.name) + '"><img src="' + s.thumb + '" alt=""><span>' + esc(s.name) + '</span></button>').join('');
+  $('#shots-note').textContent = shots.length ? 'Screenshots stay on this device and are gone after a reload; your marked colours are kept.' : '';
+}
+
+function openShot(shot) {
+  viewer.shot = shot;
+  viewer.el.hidden = false;
+  $('#viewer-role').value = markRole;
+  layoutViewer();
+  fitViewer();
+}
+
+function closeViewer() {
+  viewer.el.hidden = true;
+  viewer.drag = null;
+  viewer.rubber = null;
+  viewer.pointers.clear();
+}
+
+function layoutViewer() {
+  const r = viewer.stage.getBoundingClientRect();
+  viewer.dpr = window.devicePixelRatio || 1;
+  viewer.w = Math.max(1, r.width);
+  viewer.h = Math.max(1, r.height);
+  viewer.canvas.width = Math.round(viewer.w * viewer.dpr);
+  viewer.canvas.height = Math.round(viewer.h * viewer.dpr);
+  viewer.canvas.style.width = viewer.w + 'px';
+  viewer.canvas.style.height = viewer.h + 'px';
+}
+
+function fitViewer() {
+  const s = viewer.shot;
+  if (!s) return;
+  viewer.scale = Math.min(viewer.w / s.canvas.width, viewer.h / s.canvas.height) * 0.98;
+  viewer.ox = (viewer.w - s.canvas.width * viewer.scale) / 2;
+  viewer.oy = (viewer.h - s.canvas.height * viewer.scale) / 2;
+  drawViewer();
+}
+
+function drawViewer() {
+  const { ctx, shot } = viewer;
+  ctx.setTransform(viewer.dpr, 0, 0, viewer.dpr, 0, 0);
+  ctx.fillStyle = COLORS.mapBg;
+  ctx.fillRect(0, 0, viewer.w, viewer.h);
+  if (!shot) return;
+  ctx.imageSmoothingEnabled = viewer.scale < 2;
+  ctx.drawImage(shot.canvas, viewer.ox, viewer.oy, shot.canvas.width * viewer.scale, shot.canvas.height * viewer.scale);
+  ctx.font = '12px ' + COLORS.mono;
+  ctx.textBaseline = 'bottom';
+  for (const s of state.samples) {
+    if (s.shot !== shot.id || !s.box) continue;
+    const x = viewer.ox + s.box.x * viewer.scale, y = viewer.oy + s.box.y * viewer.scale;
+    const w = s.box.w * viewer.scale, h = s.box.h * viewer.scale;
+    const col = s.role === 'base' ? '#ffffff' : COLORS.area;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#000000';
+    ctx.strokeRect(x, y, w, h);
+    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = col;
+    ctx.strokeRect(x, y, w, h);
+    const label = sampleLabel(s);
+    const tw = ctx.measureText(label).width;
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(x, y - 18, tw + 8, 17);
+    ctx.fillStyle = col;
+    ctx.fillText(label, x + 4, y - 3);
+  }
+  if (viewer.rubber) {
+    const r = normBox(viewer.rubber);
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = markRole === 'base' ? '#ffffff' : COLORS.area;
+    ctx.lineWidth = 1.5;
+    ctx.strokeRect(viewer.ox + r.x * viewer.scale, viewer.oy + r.y * viewer.scale, r.w * viewer.scale, r.h * viewer.scale);
+    ctx.setLineDash([]);
+  }
+}
+
+function normBox(r) {
+  return { x: Math.min(r.x0, r.x1), y: Math.min(r.y0, r.y1), w: Math.abs(r.x1 - r.x0), h: Math.abs(r.y1 - r.y0) };
+}
+
+function viewerPoint(e) {
+  const r = viewer.canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+function toImage(p) {
+  return { x: (p.x - viewer.ox) / viewer.scale, y: (p.y - viewer.oy) / viewer.scale };
+}
+
+// Median of each channel over the box, so stray pixels (text, lily pads)
+// don't move the result. Also flags boxes that mix very different colours.
+function sampleShot(shot, box) {
+  let { x, y, w, h } = box;
+  if (w < 3 || h < 3) { x -= 4; y -= 4; w = 9; h = 9; }
+  x = clamp(Math.round(x), 0, shot.canvas.width - 1);
+  y = clamp(Math.round(y), 0, shot.canvas.height - 1);
+  w = clamp(Math.round(w), 1, shot.canvas.width - x);
+  h = clamp(Math.round(h), 1, shot.canvas.height - y);
+  const data = shot.ctx.getImageData(x, y, w, h).data;
+  const hist = [new Uint32Array(256), new Uint32Array(256), new Uint32Array(256)];
+  let n = 0, sl = 0, sl2 = 0;
+  for (let k = 0; k < data.length; k += 4) {
+    hist[0][data[k]]++; hist[1][data[k + 1]]++; hist[2][data[k + 2]]++;
+    const l = 0.3 * data[k] + 0.59 * data[k + 1] + 0.11 * data[k + 2];
+    sl += l; sl2 += l * l;
+    n++;
+  }
+  const rgb = hist.map(hc => {
+    let acc = 0;
+    for (let v = 0; v < 256; v++) { acc += hc[v]; if (acc * 2 >= n) return v; }
+    return 255;
+  });
+  const sd = Math.sqrt(Math.max(0, sl2 / n - (sl / n) ** 2));
+  const crop = document.createElement('canvas');
+  crop.width = crop.height = 40;
+  const cc = crop.getContext('2d');
+  cc.imageSmoothingEnabled = false;
+  const side = Math.min(w, h, 40);
+  cc.drawImage(shot.canvas, x + (w - side) / 2, y + (h - side) / 2, side, side, 0, 0, 40, 40);
+  return { rgb, px: n, uneven: sd > 22, box: { x, y, w, h }, crop: crop.toDataURL() };
+}
+
+function zoomViewer(p, f) {
+  const ip = toImage(p);
+  viewer.scale = clamp(viewer.scale * f, 0.05, 40);
+  viewer.ox = p.x - ip.x * viewer.scale;
+  viewer.oy = p.y - ip.y * viewer.scale;
+  drawViewer();
+}
+
+function bindViewer() {
+  const cv = viewer.canvas;
+  cv.tabIndex = 0;
+  cv.addEventListener('pointerdown', (e) => {
+    cv.setPointerCapture(e.pointerId);
+    const p = viewerPoint(e);
+    viewer.pointers.set(e.pointerId, p);
+    if (viewer.pointers.size === 2) {
+      const [a, b] = [...viewer.pointers.values()];
+      viewer.rubber = null;
+      viewer.drag = { type: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, mid0: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }, s0: viewer.scale, ox0: viewer.ox, oy0: viewer.oy };
+      return;
+    }
+    if (viewer.pointers.size > 2) return;
+    if (viewer.tool === 'mark' && e.button === 0) {
+      const ip = toImage(p);
+      viewer.rubber = { x0: ip.x, y0: ip.y, x1: ip.x, y1: ip.y };
+      viewer.drag = { type: 'rect' };
+    } else {
+      viewer.drag = { type: 'pan', x: p.x, y: p.y };
+    }
+  });
+  cv.addEventListener('pointermove', (e) => {
+    if (!viewer.pointers.has(e.pointerId)) return;
+    const p = viewerPoint(e);
+    viewer.pointers.set(e.pointerId, p);
+    const d = viewer.drag;
+    if (!d) return;
+    if (d.type === 'pan') {
+      viewer.ox += p.x - d.x; viewer.oy += p.y - d.y;
+      d.x = p.x; d.y = p.y;
+    } else if (d.type === 'rect') {
+      const ip = toImage(p);
+      viewer.rubber.x1 = ip.x; viewer.rubber.y1 = ip.y;
+    } else if (d.type === 'pinch' && viewer.pointers.size >= 2) {
+      const [a, b] = [...viewer.pointers.values()];
+      const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+      const ix = (d.mid0.x - d.ox0) / d.s0, iy = (d.mid0.y - d.oy0) / d.s0;
+      viewer.scale = clamp(d.s0 * (Math.hypot(a.x - b.x, a.y - b.y) || 1) / d.d0, 0.05, 40);
+      viewer.ox = mid.x - ix * viewer.scale;
+      viewer.oy = mid.y - iy * viewer.scale;
+    }
+    drawViewer();
+  });
+  const end = (e, cancelled) => {
+    if (!viewer.pointers.has(e.pointerId)) return;
+    viewer.pointers.delete(e.pointerId);
+    const d = viewer.drag;
+    if (d && d.type === 'rect' && viewer.rubber && !cancelled && viewer.shot) {
+      const s = sampleShot(viewer.shot, normBox(viewer.rubber));
+      viewer.rubber = null;
+      addSample(s.rgb, markRole, { px: s.px, uneven: s.uneven, box: s.box, crop: s.crop, shot: viewer.shot.id });
+    }
+    if (!d || d.type !== 'pinch' || viewer.pointers.size === 0) { viewer.drag = null; viewer.rubber = null; }
+    drawViewer();
+  };
+  cv.addEventListener('pointerup', (e) => end(e, false));
+  cv.addEventListener('pointercancel', (e) => end(e, true));
+  cv.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const k = e.deltaMode === 1 ? 0.05 : e.deltaMode === 2 ? 1 : 0.0015;
+    zoomViewer(viewerPoint(e), Math.exp(-e.deltaY * k));
+  }, { passive: false });
+
+  for (const b of document.querySelectorAll('[data-vtool]')) {
+    b.addEventListener('click', () => {
+      viewer.tool = b.dataset.vtool;
+      for (const o of document.querySelectorAll('[data-vtool]')) o.setAttribute('aria-pressed', String(o === b));
+    });
+  }
+  $('#viewer-role').innerHTML = roleOptions();
+  $('#viewer-role').addEventListener('change', (e) => { markRole = e.target.value; $('#hex-role').value = markRole; saveSoon(); });
+  $('#viewer-fit').addEventListener('click', fitViewer);
+  $('#viewer-done').addEventListener('click', closeViewer);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !viewer.el.hidden) closeViewer(); });
+  new ResizeObserver(() => { if (!viewer.el.hidden) { layoutViewer(); drawViewer(); } }).observe(viewer.stage);
+}
+
+function bindMatch() {
+  bindViewer();
+  const file = $('#shot-file');
+  file.addEventListener('change', () => { for (const f of file.files) loadImageFile(f); file.value = ''; });
+  document.addEventListener('paste', (e) => {
+    const items = e.clipboardData ? [...e.clipboardData.items] : [];
+    const img = items.find(it => it.kind === 'file' && /^image\//.test(it.type));
+    if (!img) return;
+    e.preventDefault();
+    loadImageFile(img.getAsFile());
+  });
+  const drop = $('#sec-match');
+  drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dropping'); });
+  drop.addEventListener('dragleave', () => drop.classList.remove('dropping'));
+  drop.addEventListener('drop', (e) => {
+    e.preventDefault();
+    drop.classList.remove('dropping');
+    for (const f of e.dataTransfer.files) loadImageFile(f);
+  });
+  $('#shots').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-shot]');
+    if (b) openShot(shots.find(s => s.id === +b.dataset.shot));
+  });
+  $('#samples').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-del]');
+    if (!b) return;
+    state.samples.splice(+b.dataset.del, 1);
+    samplesChanged();
+  });
+  const clearBtn = $('#samples-clear');
+  clearBtn.addEventListener('click', () => {
+    if (clearBtn.dataset.armed !== '1') {
+      clearBtn.dataset.armed = '1';
+      clearBtn.textContent = 'Tap again to clear';
+      setTimeout(() => { clearBtn.dataset.armed = ''; clearBtn.textContent = 'Clear marks'; }, 2500);
+      return;
+    }
+    clearBtn.dataset.armed = '';
+    clearBtn.textContent = 'Clear marks';
+    state.samples = [];
+    samplesChanged();
+  });
+
+  const role = $('#hex-role');
+  role.innerHTML = roleOptions();
+  role.value = markRole;
+  role.addEventListener('change', () => { markRole = role.value; saveSoon(); });
+  $('#hex-add').addEventListener('click', () => {
+    const v = $('#hex-in').value.trim().replace(/^#/, '');
+    const m = /^([0-9a-f]{6})$/i.exec(v) || /^\s*(\d{1,3})\D+(\d{1,3})\D+(\d{1,3})\s*$/.exec($('#hex-in').value);
+    if (!m) { $('#hex-in').focus(); $('#hex-note').textContent = 'Type a colour like #2F4E8C or 47, 78, 140.'; return; }
+    const rgb = m.length === 2 ? rgbOf(parseInt(m[1], 16)) : [m[1], m[2], m[3]].map(x => clamp(+x, 0, 255));
+    $('#hex-note').textContent = '';
+    $('#hex-in').value = '';
+    addSample(rgb, role.value);
+  });
+  $('#hex-in').addEventListener('keydown', (e) => { if (e.key === 'Enter') $('#hex-add').click(); });
+  $('#match-apply').addEventListener('click', (e) => {
+    const groups = (e.currentTarget.dataset.groups || '').split(',').filter(Boolean).map(Number);
+    if (!groups.length) return;
+    state.sel.fill(0);
+    for (const gi of groups) for (const id of WATER_GROUPS[gi].ids) state.sel[id] = 1;
+    selectionChanged();
+  });
+  renderSamples();
+  renderMatch();
+}
+
 // ───────────────────────── wiring ─────────────────────────
 
 function bindInputs() {
@@ -1552,6 +2123,7 @@ function init() {
   renderBiomes();
   renderZones();
   bindInputs();
+  bindMatch();
   syncAreaInputs();
   setMode(state.mode);
   setTool('pan');

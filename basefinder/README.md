@@ -51,6 +51,26 @@ Your settings, area and ruled-out zones are saved in the browser.
 Water colour blends across biome borders (the Biome Blend video setting), so a
 base on a border can show a mix. Bedrock clients use different water colours.
 
+### Matching water from a stream or video
+
+*Match from the stream* takes screenshots (file, paste or drop). Drag a box over
+the water at the base, then over water in biomes you know the player was in,
+from the same stream. Each box's colour is the per-channel median of its pixels.
+
+Colours are compared as log ratios R/B and G/B, which ignores brightness (depth,
+shade, time of day). The known samples fit a correction, observed = scale ×
+true + offset in that space: the offset removes the stream's colour shift, and
+the scale (ridge-pulled towards 1) handles haze, seabed showing through and
+contrast once the known samples have different water colours. On simulated
+frames with random lighting, depth, colour grade, gamma and black level, the
+right colour comes first about 98% of the time for deep water with one known
+sample, and 85–95% for shallow water once two known samples have different
+colours (against 35–50% with no correction at all).
+
+The water pictures are drawn like Java renders water from above (tinted,
+partly see-through surface over a seabed that darkens with depth) with a
+stand-in texture, so treat them as a guide; the match uses the numbers.
+
 ## How it works
 
 - `wasm/bridge.c` exposes three functions on top of cubiomes: `bf_init` (seed,

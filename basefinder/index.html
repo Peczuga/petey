@@ -244,7 +244,7 @@
   .waters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; }
   .water {
     display: grid;
-    grid-template-columns: 34px minmax(0, 1fr);
+    grid-template-columns: 48px minmax(0, 1fr);
     gap: 8px;
     align-items: center;
     text-align: left;
@@ -254,13 +254,13 @@
     cursor: pointer;
   }
   .water:hover { border-color: var(--line-2); }
-  .water .chip {
-    width: 34px; height: 30px;
+  .water .chip, canvas.wtile {
+    display: block;
+    width: 48px; height: 24px;
+    image-rendering: pixelated;
     border: 1px solid #0007;
-    background-image:
-      repeating-linear-gradient(170deg, #ffffff22 0 2px, transparent 2px 7px),
-      linear-gradient(var(--c), var(--c));
   }
+  canvas.wtile { height: 32px; }
   .water .t { min-width: 0; display: grid; }
   .water .t b { font-weight: normal; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .water .t i { font-style: normal; font-size: 11px; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -322,6 +322,75 @@
 
   .probe-out { background: var(--raise); border: 1px solid var(--line); padding: 8px; display: flex; gap: 10px; align-items: center; min-height: 40px; }
   .probe-out .sw { width: 16px; height: 16px; border: 1px solid #0008; flex: none; }
+
+  /* match from the stream */
+  #sec-match.dropping { outline: 2px dashed var(--area); outline-offset: -6px; }
+  .shots { display: flex; flex-wrap: wrap; gap: 6px; }
+  .shots:empty { display: none; }
+  .shot {
+    display: grid; gap: 4px; width: 96px;
+    background: var(--raise); border: 1px solid var(--line); padding: 4px; cursor: pointer; text-align: left;
+  }
+  .shot:hover { border-color: var(--line-2); }
+  .shot img { width: 100%; height: 54px; object-fit: cover; display: block; }
+  .shot span { font-size: 11px; color: var(--dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .samples, .matches { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+  .matches:empty { display: none; }
+  .sample, .match {
+    display: grid;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 8px;
+    background: var(--panel);
+    font-variant-numeric: tabular-nums;
+  }
+  .sample { grid-template-columns: 32px 12px minmax(0, 1fr) auto; }
+  .sample b, .match b { font-weight: normal; }
+  .sample .meta, .match .meta { color: var(--dim); font-size: 12px; overflow-wrap: anywhere; }
+  .crop { display: block; width: 32px; height: 32px; border: 1px solid #0007; image-rendering: pixelated; object-fit: cover; }
+  .sample .sw { width: 12px; height: 32px; border: 1px solid #0007; }
+  .match { grid-template-columns: 84px minmax(0, 1fr) auto; }
+  .match .pair { display: flex; gap: 4px; }
+  .match .pair .crop { width: 32px; height: 32px; }
+  .match.head-row { background: var(--raise); }
+  .match.best { box-shadow: inset 2px 0 0 var(--area); }
+  .match .word { font-size: 12px; color: var(--dim); white-space: nowrap; }
+  .match.best .word { color: var(--area); }
+  .bar { height: 3px; background: var(--raise); margin-top: 4px; }
+  .bar > i { display: block; height: 100%; background: var(--dim); }
+  .match.best .bar > i { background: var(--area); }
+  .verdict { font-size: 15px; }
+  .verdict b { font-weight: normal; color: var(--fg); }
+  .verdict span { color: var(--dim); font-size: 12px; }
+  .verdict.good b { color: var(--area); }
+  .verdict.bad { color: var(--dim); font-size: 13px; }
+
+  .viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: var(--bg);
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .viewer-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    align-items: end;
+    padding-block: calc(10px + env(safe-area-inset-top, 0px)) 10px;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+  }
+  .viewer-bar .field { flex: 0 1 260px; }
+  .viewer-bar .hint { flex: 1 1 100%; }
+  .viewer-title { font-family: var(--font-display); font-weight: normal; font-size: 22px; letter-spacing: .05em; align-self: center; margin-right: 6px; }
+  .viewer-bar .spacer { flex: 1 1 auto; }
+  .viewer-stage { position: relative; overflow: hidden; touch-action: none; background: var(--map-bg); }
+  .viewer-stage canvas { position: absolute; inset: 0; display: block; cursor: crosshair; }
+  .viewer-stage canvas:focus-visible { outline-offset: -3px; }
 
   footer { padding-block: 16px 24px; color: var(--mute); font-size: 11px; }
   footer a { color: var(--dim); }
@@ -434,6 +503,33 @@
       <p class="hint">Water blends across biome borders, so a base near a border can look in-between: pick both colours then. Bedrock players see different water colours; if you saw it on Bedrock, untick biomes by hand below instead.</p>
     </section>
 
+    <section class="block" id="sec-match">
+      <h2>Match from the stream <small id="match-count"></small></h2>
+      <p class="hint">Add a screenshot from the stream and drag a box over the water at the base. Then, from the same stream, mark water in biomes you know the player was in. Those tell the tool how the stream's lighting and colours shift things, and it corrects the base water by the same amount. Best: two or more known waters with different colours, like a river (normal blue) and a swamp or an ocean.</p>
+      <div class="btns">
+        <label class="btn primary" for="shot-file">Add screenshot</label>
+        <input type="file" id="shot-file" accept="image/*" multiple hidden>
+      </div>
+      <p class="hint">Or paste a screenshot (Ctrl+V) or drop one here. Best samples: open water in daylight, away from the shore, shadows and chat text. Deep water works better than shallow.</p>
+      <div class="shots" id="shots"></div>
+      <p class="hint" id="shots-note"></p>
+      <div class="samples" id="samples"></div>
+      <div class="row">
+        <label class="field"><span>Or type a colour</span><input type="text" id="hex-in" placeholder="#2F4E8C" spellcheck="false" autocomplete="off"></label>
+        <label class="field"><span>It is</span><select id="hex-role"></select></label>
+        <button type="button" class="btn" id="hex-add" style="flex:0 0 auto">Add</button>
+      </div>
+      <p class="hint" id="hex-note"></p>
+      <div class="verdict" id="verdict" aria-live="polite"></div>
+      <p class="hint" id="calib-note"></p>
+      <div class="matches" id="matches"></div>
+      <div class="btns">
+        <button type="button" class="btn primary" id="match-apply" hidden>Tick these biomes</button>
+        <button type="button" class="btn small cut" id="samples-clear" hidden>Clear marks</button>
+      </div>
+      <p class="hint">Water pictures are drawn shallow (left) to deep (right) in daylight without shaders. They're close, not exact: the real look depends on depth, time of day and the streamer's settings. That's why matching uses the corrected colour, not the picture.</p>
+    </section>
+
     <section class="block" id="sec-biomes">
       <h2>Biomes <small id="biome-count"></small></h2>
       <div class="quick" id="quick"></div>
@@ -501,6 +597,21 @@
       Biome generation by <a href="https://github.com/Cubitect/cubiomes" target="_blank" rel="noopener">cubiomes</a> (MIT), running in your browser. Assumes the server uses normal vanilla world generation.
     </footer>
   </aside>
+  <div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+    <div class="viewer-bar">
+      <b class="viewer-title" id="viewer-title">Mark water</b>
+      <label class="field"><span>This box is</span><select id="viewer-role"></select></label>
+      <div class="seg" role="group" aria-label="Screenshot tool">
+        <button type="button" id="vtool-mark" data-vtool="mark" aria-pressed="true">Mark</button>
+        <button type="button" id="vtool-move" data-vtool="move" aria-pressed="false">Move</button>
+      </div>
+      <span class="spacer"></span>
+      <button type="button" class="btn" id="viewer-fit">Fit</button>
+      <button type="button" class="btn primary" id="viewer-done">Done</button>
+      <p class="hint">Pick what you're marking, then drag a box over plain water. Mark several spots if you like; each one is listed in the panel. Scroll or pinch to zoom.</p>
+    </div>
+    <div class="viewer-stage" id="viewer-stage"><canvas id="viewer-canvas"></canvas></div>
+  </div>
 </div>
 <script src="cubiomes-wasm.js"></script>
 <script src="app.js"></script>
